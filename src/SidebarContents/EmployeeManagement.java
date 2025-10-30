@@ -1,13 +1,14 @@
 
 package SidebarContents;
 
-import Models.DepartmentModel;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 public class EmployeeManagement extends javax.swing.JPanel {
 
@@ -19,7 +20,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
         EmployeeTable.getTableHeader().setReorderingAllowed(false);
         EmployeeTable.getTableHeader().setResizingAllowed(false);
         Clear();
-        LoadDept();
+       loadDepartments(); 
     }
 
   
@@ -60,17 +61,17 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
         EmployeeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "EmpId", "Firstname", "Middle", "Lastname", "Contact", "Address", "Dept", "Gender", "Status", "Created"
+                "EmpId", "Firstname", "Middle", "Lastname", "Contact", "Address", "Dept", "Position", "Gender", "Status", "Created"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -174,7 +175,6 @@ public class EmployeeManagement extends javax.swing.JPanel {
             }
         });
 
-        Department.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accounting Department", "IT Department", "Others" }));
         Department.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DepartmentActionPerformed(evt);
@@ -217,7 +217,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -553,7 +553,16 @@ public class EmployeeManagement extends javax.swing.JPanel {
     private void Insert() {
         PreparedStatement pst = null;
         Connection con = DatabaseConnection.Database.getConnection();
+        
+        int selectedIndex = Department.getSelectedIndex();
+        if (selectedIndex == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a department.");
+            return;
+        }
 
+        int departmentId = departmentIds.get(selectedIndex);
+        System.out.println("Selected Department ID: " + departmentId);
+        
         try {
 
             if (FirstName.getText().trim().isEmpty()) {
@@ -603,41 +612,41 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 return;
             }
 
-            String sql = "INSERT INTO employee (FirstName, MiddleName, LastName, Contact, Gmail, Address, DepartmentId, Gender, Status, Created) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+            String sql = "INSERT INTO employee (FirstName, MiddleName, LastName, Contact, Gmail, Address, DepartmentId, PositionId, Gender, Status, Created) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
 
             pst = con.prepareStatement(sql);
 
-            // Set values from your text fields and combo boxes
             pst.setString(1, FirstName.getText());
             pst.setString(2, MiddleName.getText());
             pst.setString(3, LastName.getText());
             pst.setString(4, Contact.getText());
             pst.setString(5, Gmail.getText());
             pst.setString(6, Address.getText());
-            pst.setString(7, Department.getSelectedItem().toString());
-            pst.setString(8, Gender.getSelectedItem().toString());
-            pst.setString(9, Status.getSelectedItem().toString());
+            pst.setInt(7,departmentId);
+            pst.setInt(8, 1);
+            pst.setString(9, Gender.getSelectedItem().toString());
+            pst.setString(10, Status.getSelectedItem().toString());
 
             int rowsInserted = pst.executeUpdate();
             if (rowsInserted > 0) {
                 JOptionPane.showMessageDialog(null, "Employee added successfully!");
-                LoadData();
+                //LoadData();
                 Clear(); 
             }
 
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error inserting employee: " + e.getMessage());
         } finally {
             try {
                 if (pst != null) pst.close();
                 if (con != null) con.close();
-            } catch (Exception ex) {
+            } catch (SQLException ex) {
             }
         }
     }
 
-    
+    //Clear all fields
     private void Clear(){
         
         FirstName.setText("");
@@ -652,6 +661,38 @@ public class EmployeeManagement extends javax.swing.JPanel {
         
     }
     
+    private List<Integer> departmentIds =new ArrayList<>();
+
+    private void loadDepartments() {
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        Department.removeAllItems();
+        departmentIds.clear(); // clear old IDs
+
+        try {
+            String sql = "SELECT DepartmentId, DepartmentName FROM department";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                departmentIds.add(rs.getInt("DepartmentId")); // save ID
+                Department.addItem(rs.getString("DepartmentName")); // show name
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading departments: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {}
+        }
+    }
+
+    //Load all items in the list
     private void LoadData() {
         Connection con = DatabaseConnection.Database.getConnection();
         PreparedStatement pst = null;
@@ -660,7 +701,10 @@ public class EmployeeManagement extends javax.swing.JPanel {
         try {
 
 
-            String sql = "SELECT EmpId, FirstName, MiddleName, LastName, Contact, Gmail, Address, DepartmentId, Gender, Status, Created FROM employee";
+            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, e.PositionId, e.Gender, e.Status, e.Created " +
+             "FROM employee e " +
+             "INNER JOIN department d ON e.DepartmentId = d.DepartmentId";
+             
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
 
@@ -668,7 +712,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
             model.setRowCount(0); 
 
             while (rs.next()) {
-                Object[] row = new Object[11];
+                Object[] row = new Object[12];
                 row[0] = rs.getInt("EmpId");
                 row[1] = rs.getString("FirstName");
                 row[2] = rs.getString("MiddleName");
@@ -676,10 +720,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 row[4] = rs.getString("Contact");
                 row[5] = rs.getString("Gmail");
                 row[6] = rs.getString("Address");
-                row[7] = rs.getString("DepartmentId");
-                row[8] = rs.getString("Gender");
-                row[9] = rs.getString("Status");
-                row[10] = rs.getTimestamp("Created");
+                row[7] = rs.getString("DeptName");
+                row[8] = rs.getString("PositionId");
+                row[9] = rs.getString("Gender");
+                row[10] = rs.getString("Status");
+                row[11] = rs.getTimestamp("Created");
 
                 model.addRow(row);
             }
@@ -698,16 +743,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
     }
 
    
-    
-    private void LoadDept() {
-          Department.removeAllItems(); // clear combo box
-
-          for (DepartmentModel dpt : DepartmentModel.getDepartments()) {
-              Department.addItem(dpt.getName()); // add only the name (String)
-          }
-    }
-
-
+  
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
