@@ -20,7 +20,8 @@ public class EmployeeManagement extends javax.swing.JPanel {
         EmployeeTable.getTableHeader().setReorderingAllowed(false);
         EmployeeTable.getTableHeader().setResizingAllowed(false);
         Clear();
-       loadDepartments(); 
+        loadDepartments(); 
+        LoadPositions();
     }
 
   
@@ -32,11 +33,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         EmployeeTable = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
         AddBtn = new javax.swing.JButton();
         UpdateBtn = new javax.swing.JButton();
         DeleteBtn = new javax.swing.JButton();
         ClearBtn = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         FirstName = new javax.swing.JTextField();
         MiddleName = new javax.swing.JTextField();
         LastName = new javax.swing.JTextField();
@@ -45,7 +46,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
         Gmail = new javax.swing.JTextField();
         Address = new javax.swing.JTextField();
         Department = new javax.swing.JComboBox<>();
-        Status = new javax.swing.JComboBox<>();
+        Position = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -54,6 +55,9 @@ public class EmployeeManagement extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        Status = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -61,17 +65,17 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
         EmployeeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "EmpId", "Firstname", "Middle", "Lastname", "Contact", "Address", "Dept", "Position", "Gender", "Status", "Created"
+                "EmpId", "Firstname", "Middle", "Lastname", "Contact", "Gmail", "Address", "Dept", "Position", "Gender", "Status", "Created"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, true, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -84,25 +88,6 @@ public class EmployeeManagement extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(EmployeeTable);
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         AddBtn.setText("Add");
         AddBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -131,6 +116,40 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 ClearBtnActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(ClearBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(UpdateBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(AddBtn)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AddBtn)
+                    .addComponent(UpdateBtn)
+                    .addComponent(DeleteBtn)
+                    .addComponent(ClearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         FirstName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -181,10 +200,9 @@ public class EmployeeManagement extends javax.swing.JPanel {
             }
         });
 
-        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive", "Resigned", "Terminated", " " }));
-        Status.addActionListener(new java.awt.event.ActionListener() {
+        Position.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StatusActionPerformed(evt);
+                PositionActionPerformed(evt);
             }
         });
 
@@ -212,21 +230,35 @@ public class EmployeeManagement extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Address:");
 
+        jLabel9.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel9.setText("Gender:");
+
+        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive", "Resigned", "Terminated", " " }));
+        Status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StatusActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel10.setText("Job position:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(161, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(FirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-                            .addComponent(Status, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Status, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(MiddleName, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2)
@@ -235,11 +267,12 @@ public class EmployeeManagement extends javax.swing.JPanel {
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(LastName, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(Gender, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(LastName, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(Gender, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -247,26 +280,18 @@ public class EmployeeManagement extends javax.swing.JPanel {
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(206, 206, 206)
                                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(Department, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(AddBtn)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(UpdateBtn))
-                                            .addComponent(Address))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(Address, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(Gmail, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(DeleteBtn)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(ClearBtn))))))))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(Gmail, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                    .addComponent(Position, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -277,7 +302,8 @@ public class EmployeeManagement extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -297,13 +323,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
                     .addComponent(Address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Department, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddBtn)
-                    .addComponent(UpdateBtn)
-                    .addComponent(DeleteBtn)
-                    .addComponent(ClearBtn))
-                .addContainerGap())
+                .addGap(12, 12, 12)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Position, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -321,7 +345,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -345,9 +369,9 @@ public class EmployeeManagement extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_DepartmentActionPerformed
 
-    private void StatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatusActionPerformed
+    private void PositionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PositionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_StatusActionPerformed
+    }//GEN-LAST:event_PositionActionPerformed
 
     private void FirstNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_FirstNameFocusGained
 
@@ -360,28 +384,23 @@ public class EmployeeManagement extends javax.swing.JPanel {
     }//GEN-LAST:event_AddBtnActionPerformed
 
     private void EmployeeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EmployeeTableMouseClicked
-        // TODO add your handling code here:
         DisplaySelectedRow();
     }//GEN-LAST:event_EmployeeTableMouseClicked
 
     private void ClearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearBtnActionPerformed
-        // TODO add your handling code here:
         Clear();
     }//GEN-LAST:event_ClearBtnActionPerformed
 
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
-            // TODO add your handling code here:
             UpdateEmployee();
     }//GEN-LAST:event_UpdateBtnActionPerformed
 
     private void DeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteBtnActionPerformed
-        // TODO add your handling code here:
         Delete();
         
     }//GEN-LAST:event_DeleteBtnActionPerformed
 
     private void FirstNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FirstNameKeyTyped
-        // TODO add your handling code here:
          char c = evt.getKeyChar();
        
         if(!Character.isAlphabetic(c)){
@@ -440,11 +459,14 @@ public class EmployeeManagement extends javax.swing.JPanel {
     }//GEN-LAST:event_AddressKeyTyped
 
     private void GmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GmailKeyTyped
-        // TODO add your handling code here:
           if (Gmail.getText().length() >= 40) { 
             evt.consume(); 
         }
     }//GEN-LAST:event_GmailKeyTyped
+
+    private void StatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_StatusActionPerformed
     
     //Delete function
     private void Delete() {
@@ -491,8 +513,9 @@ public class EmployeeManagement extends javax.swing.JPanel {
         Gmail.setText(model.getValueAt(selectedRow, 5).toString());
         Address.setText(model.getValueAt(selectedRow, 6).toString());
         Department.setSelectedItem(model.getValueAt(selectedRow, 7).toString());
-        Gender.setSelectedItem(model.getValueAt(selectedRow, 8).toString());
-        Status.setSelectedItem(model.getValueAt(selectedRow, 9).toString());
+        Position.setSelectedItem(model.getValueAt(selectedRow, 8).toString());
+        Gender.setSelectedItem(model.getValueAt(selectedRow, 9).toString());
+        Status.setSelectedItem(model.getValueAt(selectedRow, 10).toString());
         selectedEmpId = Integer.parseInt(model.getValueAt(selectedRow, 0).toString());
 
     }
@@ -500,6 +523,23 @@ public class EmployeeManagement extends javax.swing.JPanel {
     //Update employee function
     private void UpdateEmployee() {
         
+        
+            int selectedIndex = Department.getSelectedIndex();
+            if (selectedIndex == -1) {
+                JOptionPane.showMessageDialog(null, "Please select a department.");
+                return;
+            }
+            int departmentId = departmentIds.get(selectedIndex);
+
+            int positionIds = positionId.get(selectedIndex);
+            int selectedPositionIndex = Position.getSelectedIndex();
+            if (selectedPositionIndex == -1) {
+                JOptionPane.showMessageDialog(null, "Please select a position.");
+                return;
+            }
+                
+            int jobPositionId = positionId.get(selectedPositionIndex);
+            
             if (selectedEmpId == -1) {
                 JOptionPane.showMessageDialog(null, "Please select a record to update.");
                 return;
@@ -516,7 +556,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
             try {
 
-                String sql = "UPDATE employee SET FirstName=?, MiddleName=?, LastName=?, Contact=?, Gmail=?, Address=?, DepartmentId=?, Gender=?, Status=? WHERE EmpId=?";
+                String sql = "UPDATE employee SET FirstName=?, MiddleName=?, LastName=?, Contact=?, Gmail=?, Address=?, DepartmentId=?, PositionId= ?, Gender=?, Status=? WHERE EmpId=?";
                 pst = con.prepareStatement(sql);
 
                 pst.setString(1, FirstName.getText().trim());
@@ -525,10 +565,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 pst.setString(4, Contact.getText().trim());
                 pst.setString(5, Gmail.getText().trim());
                 pst.setString(6, Address.getText().trim());
-                pst.setString(7, Department.getSelectedItem().toString());
-                pst.setString(8, Gender.getSelectedItem().toString());
-                pst.setString(9, Status.getSelectedItem().toString());
-                pst.setInt(10, selectedEmpId);
+                pst.setInt(7, departmentId);
+                pst.setInt(8, jobPositionId);
+                pst.setString(9, Gender.getSelectedItem().toString());
+                pst.setString(10, Status.getSelectedItem().toString());
+                pst.setInt(11, selectedEmpId);
 
                 int rowsUpdated = pst.executeUpdate();
 
@@ -630,8 +671,9 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
             int rowsInserted = pst.executeUpdate();
             if (rowsInserted > 0) {
+                
                 JOptionPane.showMessageDialog(null, "Employee added successfully!");
-                //LoadData();
+                LoadData();
                 Clear(); 
             }
 
@@ -657,11 +699,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
         Address.setText("");
         Department.setSelectedIndex(-1);
         Gender.setSelectedIndex(-1);
-        Status.setSelectedIndex(-1);
+        Position.setSelectedIndex(-1);
         
     }
     
-    private List<Integer> departmentIds =new ArrayList<>();
+    private final List<Integer> departmentIds =new ArrayList<>();
 
     private void loadDepartments() {
         Connection con = DatabaseConnection.Database.getConnection();
@@ -701,9 +743,10 @@ public class EmployeeManagement extends javax.swing.JPanel {
         try {
 
 
-            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, e.PositionId, e.Gender, e.Status, e.Created " +
+            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, p.PositionName as Name, e.Gender, e.Status, e.Created " +
              "FROM employee e " +
-             "INNER JOIN department d ON e.DepartmentId = d.DepartmentId";
+             "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
+             "INNER JOIN position p ON e.PositionId = p.PositionId" ;
              
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -712,7 +755,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
             model.setRowCount(0); 
 
             while (rs.next()) {
-                Object[] row = new Object[12];
+                Object[] row = new Object[13];
                 row[0] = rs.getInt("EmpId");
                 row[1] = rs.getString("FirstName");
                 row[2] = rs.getString("MiddleName");
@@ -721,7 +764,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 row[5] = rs.getString("Gmail");
                 row[6] = rs.getString("Address");
                 row[7] = rs.getString("DeptName");
-                row[8] = rs.getString("PositionId");
+                row[8] = rs.getString("Name");
                 row[9] = rs.getString("Gender");
                 row[10] = rs.getString("Status");
                 row[11] = rs.getTimestamp("Created");
@@ -743,7 +786,37 @@ public class EmployeeManagement extends javax.swing.JPanel {
     }
 
    
-  
+    //Fetch positions
+    private final List<Integer> positionId =new ArrayList<>();
+    private void LoadPositions(){
+        
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        Position.removeAllItems();
+        positionId.clear(); 
+
+        try {
+            String sql = "SELECT PositionId, PositionName FROM position";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                positionId.add(rs.getInt("PositionId")); 
+                Position.addItem(rs.getString("PositionName"));
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading departments: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {}
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -759,9 +832,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
     private javax.swing.JTextField Gmail;
     private javax.swing.JTextField LastName;
     private javax.swing.JTextField MiddleName;
+    private javax.swing.JComboBox<String> Position;
     private javax.swing.JComboBox<String> Status;
     private javax.swing.JButton UpdateBtn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -769,6 +844,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;

@@ -133,7 +133,7 @@ public class Dashboard extends javax.swing.JFrame {
         MainContentPanel.setLayout(MainContentPanelLayout);
         MainContentPanelLayout.setHorizontalGroup(
             MainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 685, Short.MAX_VALUE)
+            .addGap(0, 768, Short.MAX_VALUE)
         );
         MainContentPanelLayout.setVerticalGroup(
             MainContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
