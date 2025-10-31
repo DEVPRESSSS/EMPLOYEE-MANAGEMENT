@@ -76,38 +76,42 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace pref="270" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel5" min="-2" pref="105" max="-2" attributes="0"/>
-                          <Component id="jTextField1" max="32767" attributes="0"/>
-                          <Component id="EmployeeName" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jLabel6" pref="137" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jLabel5" min="-2" pref="105" max="-2" attributes="0"/>
+                              <Component id="SearchEmployee" max="32767" attributes="0"/>
+                              <Component id="jLabel6" pref="137" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="EmployeeName" min="-2" pref="145" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="jLabel4" alignment="0" min="-2" pref="129" max="-2" attributes="0"/>
+                                          <Component id="jLabel3" min="-2" pref="129" max="-2" attributes="0"/>
+                                          <Component id="Deductions" alignment="0" min="-2" pref="129" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="jLabel1" min="-2" pref="70" max="-2" attributes="0"/>
+                                          <Component id="jLabel2" alignment="0" min="-2" pref="129" max="-2" attributes="0"/>
+                                          <Component id="BaseSalary" alignment="0" min="-2" pref="119" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="SearchSalary" alignment="1" min="-2" pref="292" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="SalaryMonth" min="-2" pref="129" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="OvertimePay" min="-2" pref="129" max="-2" attributes="0"/>
+                              <Component id="Overpay" min="-2" pref="129" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel4" min="-2" pref="70" max="-2" attributes="0"/>
-                                  <Component id="Deductions" min="-2" pref="129" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="81" max="-2" attributes="0"/>
-                                      <Component id="jLabel3" min="-2" pref="84" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel1" min="-2" pref="70" max="-2" attributes="0"/>
-                                  <Component id="BaseSalary" min="-2" pref="129" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" alignment="0" min="-2" pref="84" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="SearchSalary" alignment="1" min="-2" pref="292" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -122,9 +126,9 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="BaseSalary" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="Deductions" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="SearchEmployee" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="Deductions" alignment="1" min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="BaseSalary" alignment="1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -132,11 +136,16 @@
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="OvertimePay" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="SalaryMonth" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="EmployeeName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="SalaryMonth" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="EmployeeName" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="Overpay" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="SearchSalary" min="-2" max="-2" attributes="0"/>
@@ -151,8 +160,6 @@
                 <Property name="text" type="java.lang.String" value="Search salary here..."/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="BaseSalary">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Base salary:"/>
@@ -160,38 +167,53 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Overtime Pay:"/>
+                <Property name="text" type="java.lang.String" value="Overtime Amount:"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="OvertimePay">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Salary/Month:"/>
+                <Property name="text" type="java.lang.String" value="Salary/This Month:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="SalaryMonth">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Deductions:"/>
+                <Property name="text" type="java.lang.String" value="Deductions Amount:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="Deductions">
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextField1">
+            <Component class="javax.swing.JTextField" name="SearchEmployee">
+              <Events>
+                <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="SearchEmployeeInputMethodTextChanged"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search employee:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="EmployeeName">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Employee Name:"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="EmployeeName">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="66" red="0" type="rgb"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="Deductions">
+              <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="cc" type="rgb"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="Overpay">
+            </Component>
+            <Component class="javax.swing.JLabel" name="BaseSalary">
             </Component>
           </SubComponents>
         </Container>
@@ -213,8 +235,6 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="EditBtn" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="DeleteBtn" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="AddBtn" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -231,7 +251,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="AddBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="EditBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="DeleteBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -246,36 +265,35 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTable" name="SalaryTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="4">
-                        <Column editable="true" title="Employee" type="java.lang.Object"/>
+                        <Column editable="true" title="SalaryId" type="java.lang.Object"/>
+                        <Column editable="true" title="Fullname" type="java.lang.Object"/>
                         <Column editable="true" title="Base salary" type="java.lang.Object"/>
                         <Column editable="true" title="Overtime Pay" type="java.lang.Object"/>
                         <Column editable="true" title="Deductions" type="java.lang.Object"/>
                         <Column editable="true" title="Net salary" type="java.lang.Object"/>
-                        <Column editable="true" title="Salary month" type="java.lang.Object"/>
                         <Column editable="true" title="Date Issued" type="java.lang.Object"/>
                       </Table>
                     </Property>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JButton" name="AddBtn">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Add"/>
+                <Property name="text" type="java.lang.String" value="Generate"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddBtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="EditBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Edit"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="DeleteBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Delete"/>
               </Properties>
             </Component>
           </SubComponents>
