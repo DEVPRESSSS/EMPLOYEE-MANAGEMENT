@@ -1,39 +1,60 @@
 
 package SidebarContents;
-import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.LocalDate;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import java.sql.Date;
+
 public class Salary extends javax.swing.JPanel {
 
-  
+    private int empId;
     public Salary() {
         initComponents();
         LoadData();
         SearchEmployee.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                Search(SearchEmployee.getText()); // runs when user types
+                Search(SearchEmployee.getText()); 
+                
+                String empName = EmployeeName.getText();
+                if(empName.isEmpty()){
+                    
+                    Clear();
+                }
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-//                Search(SearchEmployee.getText()); // runs when user deletes text
-                  EmployeeName.setText("");
-                  Deductions.setText("");
-                  SalaryMonth.setText("");
+                 Clear();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                // rarely triggered for JTextField (used for styled text)
+            }
+        });
+        
+        SearchSalarylist.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                SearchSalary(SearchSalarylist.getText()); 
+                
+               
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                LoadData();
+                Clear();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
             }
         });
         
@@ -46,7 +67,7 @@ public class Salary extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        SearchSalary = new javax.swing.JTextField();
+        SearchSalarylist = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -59,24 +80,24 @@ public class Salary extends javax.swing.JPanel {
         Deductions = new javax.swing.JLabel();
         Overpay = new javax.swing.JLabel();
         BaseSalary = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         SalaryTable = new javax.swing.JTable();
         AddBtn = new javax.swing.JButton();
-        EditBtn = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        SearchSalary.setText("Search salary here...");
-
         jLabel1.setText("Base salary:");
 
         jLabel2.setText("Overtime Amount:");
 
         jLabel3.setText("Salary/This Month:");
+
+        SalaryMonth.setEnabled(false);
 
         jLabel4.setText("Deductions Amount:");
 
@@ -96,19 +117,26 @@ public class Salary extends javax.swing.JPanel {
 
         Deductions.setForeground(new java.awt.Color(204, 0, 0));
 
+        jLabel7.setText("Search :");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(270, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(SearchEmployee)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                    .addComponent(EmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SearchEmployee)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                            .addComponent(EmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(2, 2, 2)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +150,7 @@ public class Salary extends javax.swing.JPanel {
                                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(BaseSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(SearchSalary, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(SearchSalarylist, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(SalaryMonth, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,11 +185,14 @@ public class Salary extends javax.swing.JPanel {
                             .addComponent(EmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(Overpay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(SearchSalary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SearchSalarylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addContainerGap())
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         SalaryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -173,8 +204,15 @@ public class Salary extends javax.swing.JPanel {
             new String [] {
                 "SalaryId", "Fullname", "Base salary", "Overtime Pay", "Deductions", "Net salary", "Date Issued"
             }
-        ));
-        SalaryTable.setEnabled(false);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(SalaryTable);
 
         AddBtn.setText("Generate");
@@ -184,8 +222,6 @@ public class Salary extends javax.swing.JPanel {
             }
         });
 
-        EditBtn.setText("Edit");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -193,11 +229,9 @@ public class Salary extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(EditBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(AddBtn)))
                 .addContainerGap())
         );
@@ -205,11 +239,9 @@ public class Salary extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddBtn)
-                    .addComponent(EditBtn))
+                .addComponent(AddBtn)
                 .addContainerGap())
         );
 
@@ -259,43 +291,54 @@ public class Salary extends javax.swing.JPanel {
     //Generate all the salary
     private void GenerateSalary(){
         
-           
+        PreparedStatement pst = null;
+        Connection con = DatabaseConnection.Database.getConnection();
+        
         try {
             String input = Overpay.getText();
             String inputDeduction = Deductions.getText();
-            String inputSalaryMonth = SalaryMonth.getText();
             String inputBaseSalary = BaseSalary.getText();
             
             double overpayValue =0;
             double deductionValue =0;
-            double salaryMonthValue =0;
             double baseSalaryValue = 0;
             
-            if(!input.isEmpty() && !inputDeduction.isEmpty() && !inputSalaryMonth.isEmpty() && !inputBaseSalary.isEmpty()){
+            //Check first if the employee has no salary yet            
+            String checkQuery = "SELECT COUNT(*) FROM salaries WHERE EmpId = ? AND MONTH(DateIssued) = MONTH(CURDATE()) AND YEAR(DateIssued) = YEAR(CURDATE())";
+            PreparedStatement checkStmt = con.prepareStatement(checkQuery);     
+            checkStmt.setInt(1, empId);
+
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            if (rs.getInt(1) > 0) {
+                JOptionPane.showMessageDialog(this, "This employee already has a salary record for this month!");
+                Clear();
+                return;
+            }
+
+            
+            
+            if(!input.isEmpty() && !inputDeduction.isEmpty() && !inputBaseSalary.isEmpty()){
                 input = input.replace("₱","").trim();
                 inputDeduction= inputDeduction.replace("₱","").trim();
-                inputSalaryMonth= inputSalaryMonth.replace("₱","").trim();
                 inputBaseSalary= inputBaseSalary.replace("₱","").trim();
                 
                 overpayValue= Double.parseDouble(input);
                 deductionValue = Double.parseDouble(inputDeduction);
-                salaryMonthValue = Double.parseDouble(inputSalaryMonth);
                 baseSalaryValue = Double.parseDouble(inputBaseSalary);
             }
             
-            PreparedStatement pst = null;
-            Connection con = DatabaseConnection.Database.getConnection();
-            String sql = "INSERT INTO salaries (EmpId, BaseSalary, OvertimePay, Deductions, SalaryMonth, DateIssued) " +
-                    "VALUES (?, ?, ?, ?, ?, NOW())";
+           
+            String sql = "INSERT INTO salaries (EmpId, BaseSalary, OvertimePay, Deductions, DateIssued) " +
+                    "VALUES (?, ?, ?, ?, NOW())";
             
          
             pst = con.prepareStatement(sql);
 
-            pst.setInt(1, 20);
+            pst.setInt(1, empId);
             pst.setDouble(2,baseSalaryValue);
             pst.setDouble(3, overpayValue);
             pst.setDouble(4, deductionValue);
-            pst.setDouble(5, salaryMonthValue);
            
 
             int rowsInserted = pst.executeUpdate();
@@ -303,10 +346,11 @@ public class Salary extends javax.swing.JPanel {
                 
                  JOptionPane.showMessageDialog(null, "Generate salary successfully!");
                  LoadData();
-                // Clear(); 
+                 Clear(); 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
+            
+            ex.printStackTrace();
         }
     }
     
@@ -317,7 +361,7 @@ public class Salary extends javax.swing.JPanel {
                      + "FROM employee e "
                      + "LEFT JOIN attendance a ON e.EmpId = a.EmpId "
                      + "LEFT JOIN position p ON e.PositionId = p.PositionId "
-                     + "WHERE e.EmpId LIKE ? OR CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) LIKE ? "
+                     + "WHERE e.EmpId LIKE ? OR CONCAT(e.FirstName, '  ', e.MiddleName, '  ', e.LastName) LIKE ? "
                      + "GROUP BY e.EmpId, FullName";
 
         try (Connection con = DatabaseConnection.Database.getConnection();
@@ -330,6 +374,7 @@ public class Salary extends javax.swing.JPanel {
 
             if (rs.next()) {
                 String fullName = rs.getString("FullName");
+                empId = rs.getInt("EmpId");
                 int totalAbsent = rs.getInt("TotalAbsent");
                 int totalOvertime = rs.getInt("Overtime");
                 double salaryRate = rs.getDouble("SalaryRate");
@@ -350,10 +395,56 @@ public class Salary extends javax.swing.JPanel {
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            Clear();
         }
     }
 
+    public void SearchSalary(String keyword) {
+        DefaultTableModel model = (DefaultTableModel) SalaryTable.getModel();
+        model.setRowCount(0); 
 
+        String sql = "SELECT s.SalaryID, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, " +
+                     "s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued " +
+                     "FROM salaries s " +
+                     "INNER JOIN employee e ON s.EmpId = e.EmpId " +
+                     "WHERE CAST(e.EmpId AS CHAR) LIKE ? " +
+                     "OR CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) LIKE ? " +
+                     "OR DATE_FORMAT(s.DateIssued, '%Y-%m-%d') LIKE ?";
+
+        try (Connection con = DatabaseConnection.Database.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql)) {
+
+            String search = "%" + keyword + "%";
+            pst.setString(1, search);
+            pst.setString(2, search);
+            pst.setString(3, search);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int salaryId = rs.getInt("SalaryID");
+                String fullName = rs.getString("FullName");
+                double baseSalary = rs.getDouble("BaseSalary");
+                double overtime = rs.getDouble("OvertimePay");
+                double deductions = rs.getDouble("Deductions");
+                double netSalary = rs.getDouble("NetSalary");
+                Date dateIssued = rs.getDate("DateIssued");
+
+                model.addRow(new Object[]{
+                    salaryId,
+                    fullName,
+                    String.format("₱%.2f", baseSalary),
+                    String.format("₱%.2f", overtime),
+                    String.format("₱%.2f", deductions),
+                    String.format("₱%.2f", netSalary),
+                    dateIssued
+                });
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading salaries: " + e.getMessage());
+        }
+    }
     //Load all the data
     private void LoadData() {
         Connection con = DatabaseConnection.Database.getConnection();
@@ -401,23 +492,32 @@ public class Salary extends javax.swing.JPanel {
             }
         }
     }
+    
+    private void Clear(){
+        EmployeeName.setText("");
+        Deductions.setText("");
+        Overpay.setText("");
+        BaseSalary.setText("");
+        SalaryMonth.setText("");
+
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddBtn;
     private javax.swing.JLabel BaseSalary;
     private javax.swing.JLabel Deductions;
-    private javax.swing.JButton EditBtn;
     private javax.swing.JLabel EmployeeName;
     private javax.swing.JLabel Overpay;
     private javax.swing.JTextField SalaryMonth;
     private javax.swing.JTable SalaryTable;
     private javax.swing.JTextField SearchEmployee;
-    private javax.swing.JTextField SearchSalary;
+    private javax.swing.JTextField SearchSalarylist;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

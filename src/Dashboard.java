@@ -1,4 +1,5 @@
 
+import SidebarContents.Attendance;
 import SidebarContents.EmployeeManagement;
 import SidebarContents.OverView;
 import SidebarContents.Salary;
@@ -211,19 +212,22 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void AttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AttendanceActionPerformed
         
-         int confirm = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to delete this employee?",
-            "Confirm Delete",
-            JOptionPane.YES_NO_OPTION);
-    
-        if (confirm == JOptionPane.YES_OPTION) {
-        
-            Login p = new Login();
-            p.setVisible(true);
-            
-            this.dispose();
-            
-        }
+    //         int confirm = JOptionPane.showConfirmDialog(this,
+    //            "Are you sure you want to delete this employee?",
+    //            "Confirm Delete",
+    //            JOptionPane.YES_NO_OPTION);
+    //    
+    //        if (confirm == JOptionPane.YES_OPTION) {
+    //        
+    //            Login p = new Login();
+    //            p.setVisible(true);
+    //            
+    //            this.dispose();
+    //            
+    //        }
+
+        showPanel(new Attendance());
+
     }//GEN-LAST:event_AttendanceActionPerformed
 
     private void SalaryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalaryBtnActionPerformed

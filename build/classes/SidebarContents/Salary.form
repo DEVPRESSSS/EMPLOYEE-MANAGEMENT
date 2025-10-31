@@ -75,16 +75,24 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace pref="270" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jLabel5" min="-2" pref="105" max="-2" attributes="0"/>
-                              <Component id="SearchEmployee" max="32767" attributes="0"/>
-                              <Component id="jLabel6" pref="137" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jLabel5" min="-2" pref="105" max="-2" attributes="0"/>
+                                      <Component id="SearchEmployee" max="32767" attributes="0"/>
+                                      <Component id="jLabel6" pref="137" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="EmployeeName" min="-2" pref="145" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="EmployeeName" min="-2" pref="145" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -101,7 +109,7 @@
                                           <Component id="BaseSalary" alignment="0" min="-2" pref="119" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <Component id="SearchSalary" alignment="1" min="-2" pref="292" max="-2" attributes="0"/>
+                                  <Component id="SearchSalarylist" alignment="1" min="-2" pref="292" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -148,17 +156,17 @@
                           <Component id="Overpay" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="SearchSalary" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="SearchSalarylist" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JTextField" name="SearchSalary">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Search salary here..."/>
-              </Properties>
+            <Component class="javax.swing.JTextField" name="SearchSalarylist">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
@@ -176,6 +184,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="SalaryMonth">
+              <Properties>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
@@ -215,12 +226,22 @@
             </Component>
             <Component class="javax.swing.JLabel" name="BaseSalary">
             </Component>
+            <Component class="javax.swing.JLabel" name="jLabel7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Search :"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel3">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                <LineBorder/>
+              </Border>
             </Property>
           </Properties>
 
@@ -230,11 +251,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" pref="738" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" alignment="0" pref="736" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="EditBtn" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="AddBtn" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -246,12 +265,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="410" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="408" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="AddBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="EditBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="AddBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -269,16 +285,15 @@
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="7" rowCount="4">
-                        <Column editable="true" title="SalaryId" type="java.lang.Object"/>
-                        <Column editable="true" title="Fullname" type="java.lang.Object"/>
-                        <Column editable="true" title="Base salary" type="java.lang.Object"/>
-                        <Column editable="true" title="Overtime Pay" type="java.lang.Object"/>
-                        <Column editable="true" title="Deductions" type="java.lang.Object"/>
-                        <Column editable="true" title="Net salary" type="java.lang.Object"/>
-                        <Column editable="true" title="Date Issued" type="java.lang.Object"/>
+                        <Column editable="false" title="SalaryId" type="java.lang.Object"/>
+                        <Column editable="false" title="Fullname" type="java.lang.Object"/>
+                        <Column editable="false" title="Base salary" type="java.lang.Object"/>
+                        <Column editable="false" title="Overtime Pay" type="java.lang.Object"/>
+                        <Column editable="false" title="Deductions" type="java.lang.Object"/>
+                        <Column editable="false" title="Net salary" type="java.lang.Object"/>
+                        <Column editable="false" title="Date Issued" type="java.lang.Object"/>
                       </Table>
                     </Property>
-                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -290,11 +305,6 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddBtnActionPerformed"/>
               </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="EditBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Edit"/>
-              </Properties>
             </Component>
           </SubComponents>
         </Container>
