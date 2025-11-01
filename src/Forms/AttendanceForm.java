@@ -1,36 +1,62 @@
 
 package Forms;
 
+import SidebarContents.Attendance;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import javax.swing.JOptionPane;
+
 
 public class AttendanceForm extends javax.swing.JFrame {
 
-
-    public AttendanceForm() {
+    private int _empId;
+    private String _state;
+    private Attendance _form;
+    public AttendanceForm(Attendance form, int empId,String state ) {
         initComponents();
+        this._empId = empId;
+        this._form = form;
+        this._state= state;
+       
+
+        
+        if (_state.equals("Present") || _state.equals("Late")) {
+             Status.setVisible(false); 
+             TimeInBtn.setVisible(false);
+             StatusLbl.setVisible(false);
+            
+        }
+        
+
+        
         SelectedStatus();
+        
+        
+        Status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelectedStatus();
+            }
+        });
+        
+
     }
 
-    private void SelectedStatus(){
-        
-        int statusInput = StatusCombobox.getSelectedIndex();
-        if(statusInput == 0){
-            
-            TimeInBtn.setEnabled(false);
-        }else{
-             TimeInBtn.setEnabled(true);
-        }
-    }
    
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        StatusCombobox = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
+        Status = new javax.swing.JComboBox<>();
+        StatusLbl = new javax.swing.JLabel();
+        TimeOutBtn = new javax.swing.JButton();
         TimeInBtn = new javax.swing.JButton();
-        CloseBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -38,20 +64,31 @@ public class AttendanceForm extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Status:");
-
-        StatusCombobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Present", "Absent", "Late", "On Leave" }));
-
-        TimeInBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        TimeInBtn.setText("Time In");
-
-        CloseBtn.setText("X");
-        CloseBtn.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("X");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CloseBtnActionPerformed(evt);
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Present", "Absent", "Late", "OnLeave" }));
+
+        StatusLbl.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        StatusLbl.setText("Status:");
+
+        TimeOutBtn.setText("TIME OUT");
+        TimeOutBtn.setEnabled(false);
+        TimeOutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TimeOutBtnActionPerformed(evt);
+            }
+        });
+
+        TimeInBtn.setText("TIME IN");
+        TimeInBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TimeInBtnActionPerformed(evt);
             }
         });
 
@@ -59,28 +96,33 @@ public class AttendanceForm extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(StatusCombobox, 0, 199, Short.MAX_VALUE)
-                    .addComponent(TimeInBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(50, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(CloseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(Status, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(StatusLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TimeOutBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                    .addComponent(TimeInBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(CloseBtn)
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addGap(19, 19, 19)
+                .addComponent(StatusLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(StatusCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
-                .addComponent(TimeInBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addComponent(Status, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(TimeInBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TimeOutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -113,29 +155,146 @@ public class AttendanceForm extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void CloseBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
-       
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
         this.dispose();
-    }                                        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
- 
+    private void TimeInBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TimeInBtnActionPerformed
+        
+        
+        PreparedStatement pst = null;
+        Connection con = DatabaseConnection.Database.getConnection();
+        
+        try {
+          
+           
+            String sql = "INSERT INTO attendance (EmpId, Date, TimeIn, Status) VALUES (?, ?, ?, ?)";
+
+            
+            
+            LocalDate currentDate = LocalDate.now();
+            LocalTime currentTime = LocalTime.now();
+
+            java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
+
+            java.sql.Time sqlTime = java.sql.Time.valueOf(currentTime);            
+            pst = con.prepareStatement(sql);
+
+            pst.setInt(1, _empId);
+            pst.setDate(2, sqlDate);
+            pst.setTime(3, sqlTime);
+            pst.setString(4, Status.getSelectedItem().toString());
+           
+
+            int rowsInserted = pst.executeUpdate();
+            if (rowsInserted > 0) {
+                
+                 JOptionPane.showMessageDialog(null, "Employee attendance record successfully");
+                 _form.FetchAllEmployee();
+                 
+                 this.dispose();
+                
+            }
+        } catch (SQLException ex) {
+            
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_TimeInBtnActionPerformed
+
+    private void TimeOutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TimeOutBtnActionPerformed
+        
+        
+  
+        SingleTimeOut(_empId);
+
+    }//GEN-LAST:event_TimeOutBtnActionPerformed
+
+    private void SelectedStatus(){
+        
+        int statusInput = Status.getSelectedIndex();
+        if(statusInput == 0 || statusInput == 2){
+            
+            TimeInBtn.setEnabled(true);
+            TimeOutBtn.setEnabled(true);
+        }else{
+             TimeInBtn.setEnabled(false);
+             TimeOutBtn.setEnabled(false);
+        }
+    }
+    
+    private void SingleTimeOut(int empId) {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Do you want to time out this employee?",
+                "Confirm Time Out",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            String checkSql = "SELECT AttendanceId FROM attendance " +
+                              "WHERE EmpId = ? " +
+                              "AND DATE(Date) = CURDATE() " +
+                              "AND Status = 'Present' " +
+                              "AND (TimeOut IS NULL OR TimeOut = '')";
+            pst = con.prepareStatement(checkSql);
+            pst.setInt(1, empId);
+            rs = pst.executeQuery();
+
+            if (!rs.next()) {
+                JOptionPane.showMessageDialog(this, "This employee has already timed out or has no time-in record today.");
+                return;
+            }
+
+            int attendanceId = rs.getInt("AttendanceID");
+
+            String updateSql = "UPDATE attendance SET TimeOut = NOW(), Status = 'Completed' WHERE AttendanceId = ?";
+            pst = con.prepareStatement(updateSql);
+            pst.setInt(1, attendanceId);
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Successfully timed out the employee!");
+            _form.FetchAllEmployee(); 
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error during single time-out: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                // ignore
+            }
+        }
+    }
     public static void main(String args[]) {
-     
+       
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AttendanceForm().setVisible(true);
+                new AttendanceForm(null, 0,"").setVisible(true);
             }
         });
     }
 
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton CloseBtn;
-    private javax.swing.JComboBox<String> StatusCombobox;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> Status;
+    private javax.swing.JLabel StatusLbl;
     private javax.swing.JButton TimeInBtn;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton TimeOutBtn;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
