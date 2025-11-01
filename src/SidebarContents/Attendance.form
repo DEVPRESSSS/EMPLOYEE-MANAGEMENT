@@ -184,13 +184,15 @@
                 <Component class="javax.swing.JTable" name="AttendanceTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="6" rowCount="4">
+                      <Table columnCount="8" rowCount="4">
                         <Column editable="false" title="Name" type="java.lang.Object"/>
                         <Column editable="false" title="Job Position" type="java.lang.Object"/>
+                        <Column editable="false" title="Department" type="java.lang.Object"/>
+                        <Column editable="false" title="Gmail" type="java.lang.Object"/>
                         <Column editable="false" title="Time In" type="java.lang.Object"/>
                         <Column editable="false" title="Time Out" type="java.lang.Object"/>
-                        <Column editable="true" title="Status" type="java.lang.Object"/>
-                        <Column editable="true" title="Overtime Today" type="java.lang.Object"/>
+                        <Column editable="false" title="Status" type="java.lang.Object"/>
+                        <Column editable="false" title="Overtime Today" type="java.lang.Object"/>
                       </Table>
                     </Property>
                   </Properties>

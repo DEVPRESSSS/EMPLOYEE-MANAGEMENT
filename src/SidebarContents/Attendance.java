@@ -2,6 +2,12 @@
 package SidebarContents;
 
 import Forms.AttendanceForm;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Attendance extends javax.swing.JPanel {
@@ -9,6 +15,7 @@ public class Attendance extends javax.swing.JPanel {
     private int selectedRow;
     public Attendance() {
         initComponents();
+        FetchAllEmployee();
     }
 
     private void OpenTimeInWindow(){
@@ -28,6 +35,53 @@ public class Attendance extends javax.swing.JPanel {
             
             OpenTimeInWindow();
         }
+    }
+    
+    private void FetchAllEmployee(){
+        
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+
+
+            String sql = "SELECT e.EmpId, CONCAT(e.FirstName, '', e.MiddleName, '', e.LastName) as FullName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, p.PositionName as Name, e.Gender, e.Status, e.Created " +
+             "FROM employee e " +
+             "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
+             "INNER JOIN position p ON e.PositionId = p.PositionId" ;
+             
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            DefaultTableModel model = (DefaultTableModel) AttendanceTable.getModel();
+            model.setRowCount(0); 
+
+            while (rs.next()) {
+                Object[] row = new Object[5];
+                row[0] = rs.getString("Fullname");
+                row[1] = rs.getString("Name");
+                row[3] = rs.getString("Gmail");
+                row[2] = rs.getString("DeptName");
+                row[4] = rs.getString("");
+                row[5] = rs.getString("");
+                row[6] = rs.getString("Status");
+
+                model.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading data: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                // ignore
+            }
+        }
+
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -93,17 +147,17 @@ public class Attendance extends javax.swing.JPanel {
 
         AttendanceTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Name", "Job Position", "Time In", "Time Out", "Status", "Overtime Today"
+                "Name", "Job Position", "Department", "Gmail", "Time In", "Time Out", "Status", "Overtime Today"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
