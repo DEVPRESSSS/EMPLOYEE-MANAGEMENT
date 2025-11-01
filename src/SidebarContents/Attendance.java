@@ -114,8 +114,7 @@ public class Attendance extends javax.swing.JPanel {
              "FROM employee e " +
              "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
              "INNER JOIN position p ON e.PositionId = p.PositionId " +
-             "LEFT JOIN attendance a ON e.EmpId = a.EmpId";  
-
+             "LEFT JOIN attendance a ON e.EmpId = a.EmpId AND DATE(a.Date) = CURDATE() ";
              
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -571,7 +570,7 @@ public class Attendance extends javax.swing.JPanel {
                 break;
 
             case "Today":
-                sql += "WHERE DATE(a.DATE) = CURDATE()";
+                sql += "WHERE DATE(a.Date) = CURDATE()";
                 break;
 
             case "Week":
