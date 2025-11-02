@@ -252,42 +252,57 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ShowPasswordActionPerformed
 
-    private void Auth() {
-        
-            String username = Username.getText().trim();
-            String password = new String(Password.getPassword()).trim();
+   private void Auth() {
+    String username = Username.getText().trim();
+    String password = new String(Password.getPassword()).trim();
 
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Username or password cannot be empty!");
-                Clear();
-                return;
-            }
-
-            try (Connection con = DatabaseConnection.Database.getConnection()) {
-                String sql = "SELECT * FROM appusers WHERE Username = ? AND Password = ?";
-                PreparedStatement pst = con.prepareStatement(sql);
-                
-                pst.setString(1, username);
-                pst.setString(2, password);
-
-                ResultSet rs = pst.executeQuery();
-
-                if (rs.next()) {
-                    JOptionPane.showMessageDialog(this, "Login successful!");
-                    Clear();
-
-                    Dashboard main = new Dashboard();
-                    main.setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Invalid username or password!");
-                    Clear();
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Database connection error: " + e.getMessage());
-            }
+    if (username.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Username or password cannot be empty!");
+        Clear();
+        return;
     }
+
+    try (Connection con = DatabaseConnection.Database.getConnection()) {
+        String sql = "SELECT UserId, Name, Username, RoleName FROM appusers WHERE Username = ? AND Password = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, username);
+        pst.setString(2, password);
+
+        
+        
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            String role = rs.getString("RoleName");
+            String name = rs.getString("Name");
+
+            JOptionPane.showMessageDialog(this, "Welcome " + name + "!");
+
+            Clear();
+            this.dispose();
+
+            if ("Admin".equalsIgnoreCase(role)) {
+                Dashboard adminDash = new Dashboard();
+                adminDash.setVisible(true);
+            } 
+            else if ("HR".equalsIgnoreCase(role)) {
+                HRdashboard hrDash = new HRdashboard();
+                hrDash.setVisible(true);
+            } 
+            else {
+                JOptionPane.showMessageDialog(this, "No dashboard assigned for role: " + role);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password!");
+            Clear();
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Database connection error: " + e.getMessage());
+    }
+}
+
 
     
     private void Clear(){

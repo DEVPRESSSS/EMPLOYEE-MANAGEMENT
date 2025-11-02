@@ -555,9 +555,9 @@ public class Users extends javax.swing.JPanel {
 
                 pst.setString(1, name);
                 pst.setString(2, username);
-                pst.setString(3, contact);
-                pst.setString(4, password);
-                pst.setString(5, text);
+                pst.setString(3, password);
+                pst.setString(4, text);
+                pst.setString(5, contact);
                 pst.setString(6, selectedRole);
               
                 pst.setInt(7,appUserId );
