@@ -1,6 +1,7 @@
 
 package SidebarContents;
 
+import java.awt.Color;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
@@ -22,6 +23,26 @@ public class EmployeeManagement extends javax.swing.JPanel {
         Clear();
         loadDepartments(); 
         LoadPositions();
+        
+        SearchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                searchEmployee();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                searchEmployee();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                searchEmployee();
+                
+            }
+        });
+        
+        
     }
 
   
@@ -58,6 +79,8 @@ public class EmployeeManagement extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         Status = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
+        SearchField = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -66,17 +89,17 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
         EmployeeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "EmpId", "Firstname", "Middle", "Lastname", "Contact", "Gmail", "Address", "Dept", "Position", "Gender", "Status", "Created"
+                "EmpId", "Firstname", "Middle", "Lastname", "Contact", "Gmail", "Address", "Dept", "Position", "Gender", "Status", "Days", "Created"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true, false, false, false, false, false, true
+                false, false, false, false, false, true, false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -245,13 +268,21 @@ public class EmployeeManagement extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Job position:");
 
+        SearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SearchFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel11.setText("Search:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(159, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -293,7 +324,13 @@ public class EmployeeManagement extends javax.swing.JPanel {
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(Gmail, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                    .addComponent(Position, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(386, 386, 386)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Position, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SearchField))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -329,7 +366,11 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Position, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -441,7 +482,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
     }//GEN-LAST:event_LastNameKeyTyped
 
     private void ContactKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ContactKeyTyped
-        // TODO add your handling code here:
+        
          char c = evt.getKeyChar();
        
         if(!Character.isDigit(c)){
@@ -469,6 +510,12 @@ public class EmployeeManagement extends javax.swing.JPanel {
     private void StatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatusActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_StatusActionPerformed
+
+    private void SearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchFieldKeyTyped
+        if (SearchField.getText().length() >= 25) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_SearchFieldKeyTyped
     
     //Delete function
     private void Delete() {
@@ -548,11 +595,61 @@ public class EmployeeManagement extends javax.swing.JPanel {
             }
 
 
-            if (FirstName.getText().trim().isEmpty() || LastName.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please fill all required fields.");
+           if (FirstName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter First Name.");
+            FirstName.requestFocus();
+            return;
+            }
+            if (MiddleName.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter Middle Name.");
+                MiddleName.requestFocus();
+                return;
+            }
+            if (LastName.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter Last Name.");
+                LastName.requestFocus();
+                return;
+            }
+            if (Contact.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter Contact Number.");
+                Contact.requestFocus();
+                return;
+            }
+            if (Gmail.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter Gmail.");
+                Gmail.requestFocus();
+                return;
+            }
+            if (Address.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter Address.");
+                Address.requestFocus();
                 return;
             }
 
+            if (Department.getSelectedIndex() == -1) {
+                JOptionPane.showMessageDialog(null, "Please select a Department.");
+                Department.requestFocus();
+                return;
+            }
+            if (Gender.getSelectedIndex() == -1) {
+                JOptionPane.showMessageDialog(null, "Please select Gender.");
+                Gender.requestFocus();
+                return;
+            }
+            if (Status.getSelectedIndex() == -1) {
+                JOptionPane.showMessageDialog(null, "Please select Status.");
+                Status.requestFocus();
+                return;
+            }
+            
+            String text = Gmail.getText().trim().toLowerCase();
+            if (!text.endsWith("@gmail.com")) {
+                Gmail.setText("");  
+                return;
+            } else {
+                Gmail.setBackground(Color.WHITE); // valid
+            }
+            
             Connection con = DatabaseConnection.Database.getConnection();
             PreparedStatement pst = null;
 
@@ -565,7 +662,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 pst.setString(2, MiddleName.getText().trim());
                 pst.setString(3, LastName.getText().trim());
                 pst.setString(4, Contact.getText().trim());
-                pst.setString(5, Gmail.getText().trim());
+                pst.setString(5, text);
                 pst.setString(6, Address.getText().trim());
                 pst.setInt(7, departmentId);
                 pst.setInt(8, jobPositionId);
@@ -654,6 +751,15 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 Status.requestFocus();
                 return;
             }
+            
+            String text = Gmail.getText().trim().toLowerCase();
+            if (!text.endsWith("@gmail.com")) {
+                Gmail.setText("");  
+                return;
+            } else {
+                Gmail.setBackground(Color.WHITE); // valid
+            }
+    
 
             String sql = "INSERT INTO employee (FirstName, MiddleName, LastName, Contact, Gmail, Address, DepartmentId, PositionId, Gender, Status, Created) " +
                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
@@ -664,7 +770,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
             pst.setString(2, MiddleName.getText());
             pst.setString(3, LastName.getText());
             pst.setString(4, Contact.getText());
-            pst.setString(5, Gmail.getText());
+            pst.setString(5, text);
             pst.setString(6, Address.getText());
             pst.setInt(7,departmentId);
             pst.setInt(8, 1);
@@ -681,6 +787,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error inserting employee: " + e.getMessage());
+            Clear();
         } finally {
             try {
                 if (pst != null) pst.close();
@@ -745,7 +852,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
         try {
 
 
-            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, p.PositionName as Name, e.Gender, e.Status, e.Created " +
+            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, p.PositionName as Name, e.Gender, e.Status, e.Created, e.Days " +
              "FROM employee e " +
              "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
              "INNER JOIN position p ON e.PositionId = p.PositionId" ;
@@ -757,7 +864,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
             model.setRowCount(0); 
 
             while (rs.next()) {
-                Object[] row = new Object[13];
+                Object[] row = new Object[14];
                 row[0] = rs.getInt("EmpId");
                 row[1] = rs.getString("FirstName");
                 row[2] = rs.getString("MiddleName");
@@ -769,7 +876,8 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 row[8] = rs.getString("Name");
                 row[9] = rs.getString("Gender");
                 row[10] = rs.getString("Status");
-                row[11] = rs.getTimestamp("Created");
+                row[11] = rs.getString("Days");
+                row[12] = rs.getTimestamp("Created");
 
                 model.addRow(row);
             }
@@ -820,6 +928,61 @@ public class EmployeeManagement extends javax.swing.JPanel {
         }
     }
 
+    
+     private void searchEmployee() {
+        String keyword = SearchField.getText().trim();
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, " +
+                         "e.Contact, e.Gmail, e.Address, " +
+                         "d.DepartmentName AS DeptName, " +
+                         "p.PositionName AS Name, " +
+                         "e.Gender, e.Status, e.Created, e.Days " +
+                         "FROM employee e " +
+                         "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
+                         "INNER JOIN position p ON e.PositionId = p.PositionId " +
+                         "WHERE CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) LIKE ?";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, "%" + keyword + "%"); 
+            rs = pst.executeQuery();
+
+            DefaultTableModel model = (DefaultTableModel) EmployeeTable.getModel();
+            model.setRowCount(0); 
+
+            while (rs.next()) {
+                Object[] row = new Object[14];
+                row[0] = rs.getInt("EmpId");
+                row[1] = rs.getString("FirstName");
+                row[2] = rs.getString("MiddleName");
+                row[3] = rs.getString("LastName");
+                row[4] = rs.getString("Contact");
+                row[5] = rs.getString("Gmail");
+                row[6] = rs.getString("Address");
+                row[7] = rs.getString("DeptName");
+                row[8] = rs.getString("Name");
+                row[9] = rs.getString("Gender");
+                row[10] = rs.getString("Status");
+                row[11] = rs.getString("Days");
+                row[12] = rs.getTimestamp("Created");
+                model.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Search error: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                // ignore
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddBtn;
@@ -835,10 +998,12 @@ public class EmployeeManagement extends javax.swing.JPanel {
     private javax.swing.JTextField LastName;
     private javax.swing.JTextField MiddleName;
     private javax.swing.JComboBox<String> Position;
+    private javax.swing.JTextField SearchField;
     private javax.swing.JComboBox<String> Status;
     private javax.swing.JButton UpdateBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

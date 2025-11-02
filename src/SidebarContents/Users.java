@@ -1,6 +1,7 @@
 
 package SidebarContents;
 
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,6 +43,8 @@ public class Users extends javax.swing.JPanel {
         Name = new javax.swing.JTextField();
         RoleCb = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        SearchField = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         UsersTable = new javax.swing.JTable();
@@ -59,6 +62,11 @@ public class Users extends javax.swing.JPanel {
                 UsernameActionPerformed(evt);
             }
         });
+        Username.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                UsernameKeyTyped(evt);
+            }
+        });
 
         jLabel1.setText("Contact:");
 
@@ -69,10 +77,20 @@ public class Users extends javax.swing.JPanel {
                 EmailActionPerformed(evt);
             }
         });
+        Email.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                EmailKeyTyped(evt);
+            }
+        });
 
         Password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PasswordActionPerformed(evt);
+            }
+        });
+        Password.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                PasswordKeyTyped(evt);
             }
         });
 
@@ -81,6 +99,11 @@ public class Users extends javax.swing.JPanel {
         Contact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ContactActionPerformed(evt);
+            }
+        });
+        Contact.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ContactKeyTyped(evt);
             }
         });
 
@@ -93,17 +116,39 @@ public class Users extends javax.swing.JPanel {
                 NameActionPerformed(evt);
             }
         });
+        Name.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                NameKeyTyped(evt);
+            }
+        });
 
         RoleCb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "HR" }));
 
         jLabel6.setText("Role:");
+
+        SearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SearchFieldKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SearchFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel7.setText("Search:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SearchField)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(Name, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
@@ -144,12 +189,14 @@ public class Users extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(RoleCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(RoleCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
 
@@ -289,7 +336,15 @@ public class Users extends javax.swing.JPanel {
         String password = Password.getText();
         String email = Email.getText();
         String selectedRole = RoleCb.getSelectedItem().toString();
+        String text =   Email.getText().trim().toLowerCase();
         
+        
+            if (!text.endsWith("@gmail.com")) {
+                Email.setText("");  
+                return;
+            } else {
+                Email.setBackground(Color.WHITE); 
+            }
         if(name.isEmpty() || username.isEmpty() || contact.isEmpty() || password.isEmpty()|| email.isEmpty()){
             
             JOptionPane.showMessageDialog(null, "All fields are required");
@@ -307,7 +362,7 @@ public class Users extends javax.swing.JPanel {
             pst.setString(2, username);
             pst.setString(3, contact);
             pst.setString(4, password);
-            pst.setString(5, email);
+            pst.setString(5, text);
             pst.setString(6, selectedRole);
              
             int rowsInserted = pst.executeUpdate();
@@ -400,6 +455,7 @@ public class Users extends javax.swing.JPanel {
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error loading data: " + e.getMessage());
+            ClearFields();
         } finally {
             try {
                 if (rs != null) rs.close();
@@ -412,7 +468,56 @@ public class Users extends javax.swing.JPanel {
         
     }
     
-    
+    private void SearchUsers(String searchValue) {
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            // SQL with LIKE for searching and excluding Admins
+            String sql = "SELECT UserId, Name, Username, Password, Contact, Email, RoleName, Created "
+                       + "FROM appusers "
+                       + "WHERE RoleName <> 'Admin' "
+                       + "AND (Name LIKE ? OR Username LIKE ? OR Email LIKE ?)";
+
+            pst = con.prepareStatement(sql);
+            String searchPattern = "%" + searchValue + "%";
+            pst.setString(1, searchPattern);
+            pst.setString(2, searchPattern);
+            pst.setString(3, searchPattern);
+
+            rs = pst.executeQuery();
+
+            DefaultTableModel model = (DefaultTableModel) UsersTable.getModel();
+            model.setRowCount(0); // Clear table first
+
+            while (rs.next()) {
+                Object[] row = new Object[8];
+                row[0] = rs.getInt("UserId");
+                row[1] = rs.getString("Name");
+                row[2] = rs.getString("Username");
+                row[3] = rs.getString("Password");
+                row[4] = rs.getString("Contact");
+                row[5] = rs.getString("Email");
+                row[6] = rs.getString("RoleName") != null ? rs.getString("RoleName") : "";
+                row[7] = rs.getTimestamp("Created");
+
+                model.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error searching data: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                // ignore
+            }
+        }
+    }
+
     private void UpdateUser(){
         
         PreparedStatement pst = null;
@@ -425,6 +530,16 @@ public class Users extends javax.swing.JPanel {
         String email = Email.getText();
         String selectedRole = RoleCb.getSelectedItem().toString();
         
+        
+        String text =   Email.getText().trim().toLowerCase();
+        
+        
+            if (!text.endsWith("@gmail.com")) {
+                Email.setText("");  
+                return;
+            } else {
+                Email.setBackground(Color.WHITE); 
+            }
         if(name.isEmpty() || username.isEmpty() || contact.isEmpty() || password.isEmpty()|| email.isEmpty()){
             
             JOptionPane.showMessageDialog(null, "All fields are required");
@@ -442,7 +557,7 @@ public class Users extends javax.swing.JPanel {
                 pst.setString(2, username);
                 pst.setString(3, contact);
                 pst.setString(4, password);
-                pst.setString(5, email);
+                pst.setString(5, text);
                 pst.setString(6, selectedRole);
               
                 pst.setInt(7,appUserId );
@@ -457,6 +572,7 @@ public class Users extends javax.swing.JPanel {
 
             } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error updating employee: " + e.getMessage());
+                ClearFields();
             } finally {
                 try {
                     if (pst != null) pst.close();
@@ -529,6 +645,68 @@ public class Users extends javax.swing.JPanel {
         GetSelectedRow();
     }//GEN-LAST:event_UsersTableMouseClicked
 
+    private void NameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NameKeyTyped
+        char c = evt.getKeyChar();
+
+        // Allow letters, space, and period only
+        if (!Character.isAlphabetic(c) && c != ' ' && c != '.') {
+            evt.consume(); // Block any other character
+        }
+
+        // Limit the length to 30 characters
+        if (Name.getText().length() >= 30) {
+            evt.consume();
+        }
+
+    }//GEN-LAST:event_NameKeyTyped
+
+    private void ContactKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ContactKeyTyped
+        char c = evt.getKeyChar();
+       
+        if(!Character.isDigit(c)){
+            
+            evt.consume();
+        }
+         if (Contact.getText().length() >= 11) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_ContactKeyTyped
+
+    private void UsernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UsernameKeyTyped
+        char c = evt.getKeyChar();
+       
+        if(!Character.isAlphabetic(c)){
+            
+            evt.consume();
+        }
+         if (Username.getText().length() >= 30) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_UsernameKeyTyped
+
+    private void EmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_EmailKeyTyped
+        if (Email.getText().length() >= 40) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_EmailKeyTyped
+
+    private void PasswordKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordKeyTyped
+        if (Password.getText().length() >= 20) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_PasswordKeyTyped
+
+    private void SearchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchFieldKeyReleased
+        String searchValue = SearchField.getText().trim();
+        SearchUsers(searchValue);
+    }//GEN-LAST:event_SearchFieldKeyReleased
+
+    private void SearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchFieldKeyTyped
+        if (SearchField.getText().length() >= 25) { 
+                    evt.consume(); 
+                }
+    }//GEN-LAST:event_SearchFieldKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddBtn;
@@ -540,6 +718,7 @@ public class Users extends javax.swing.JPanel {
     private javax.swing.JTextField Name;
     private javax.swing.JTextField Password;
     private javax.swing.JComboBox<String> RoleCb;
+    private javax.swing.JTextField SearchField;
     private javax.swing.JTextField Username;
     private javax.swing.JTable UsersTable;
     private javax.swing.JLabel jLabel1;
@@ -548,6 +727,7 @@ public class Users extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

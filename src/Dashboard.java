@@ -1,6 +1,8 @@
 
 import SidebarContents.Attendance;
 import SidebarContents.EmployeeManagement;
+import SidebarContents.JobPosition;
+import SidebarContents.LeaveManagement;
 import SidebarContents.OverView;
 import SidebarContents.Salary;
 import SidebarContents.Users;
@@ -15,7 +17,7 @@ public class Dashboard extends javax.swing.JFrame {
     
     public Dashboard() {
         initComponents();
-        showPanel(new OverView());
+        showPanel(new EmployeeManagement());
     }
 
   
@@ -24,7 +26,6 @@ public class Dashboard extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        DashboardBtn = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         SalaryBtn = new javax.swing.JButton();
         UsersBtn = new javax.swing.JButton();
@@ -38,16 +39,6 @@ public class Dashboard extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(0, 102, 102));
-
-        DashboardBtn.setBackground(new java.awt.Color(255, 255, 255));
-        DashboardBtn.setForeground(new java.awt.Color(0, 153, 255));
-        DashboardBtn.setText("Dashboard");
-        DashboardBtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        DashboardBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DashboardBtnActionPerformed(evt);
-            }
-        });
 
         jButton6.setBackground(new java.awt.Color(255, 255, 255));
         jButton6.setForeground(new java.awt.Color(0, 153, 255));
@@ -134,7 +125,6 @@ public class Dashboard extends javax.swing.JFrame {
                             .addComponent(UsersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(SalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(DashboardBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Leave, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JobPositions, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -148,9 +138,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel1)
-                .addGap(42, 42, 42)
-                .addComponent(DashboardBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(94, 94, 94)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(SalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,19 +198,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void AttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AttendanceActionPerformed
         
-    //         int confirm = JOptionPane.showConfirmDialog(this,
-    //            "Are you sure you want to delete this employee?",
-    //            "Confirm Delete",
-    //            JOptionPane.YES_NO_OPTION);
-    //    
-    //        if (confirm == JOptionPane.YES_OPTION) {
-    //        
-    //            Login p = new Login();
-    //            p.setVisible(true);
-    //            
-    //            this.dispose();
-    //            
-    //        }
+
 
         showPanel(new Attendance());
 
@@ -233,20 +209,29 @@ public class Dashboard extends javax.swing.JFrame {
         
     }//GEN-LAST:event_SalaryBtnActionPerformed
 
-    private void DashboardBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DashboardBtnActionPerformed
-        showPanel(new OverView());
-    }//GEN-LAST:event_DashboardBtnActionPerformed
-
     private void LeaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveActionPerformed
-        // TODO add your handling code here:
+        showPanel(new LeaveManagement());
     }//GEN-LAST:event_LeaveActionPerformed
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-        // TODO add your handling code here:
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to log out?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION);
+        
+            if (confirm == JOptionPane.YES_OPTION) {
+            
+                Login p = new Login();
+                p.setVisible(true);
+                
+                this.dispose();
+                
+            }
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void JobPositionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JobPositionsActionPerformed
-        // TODO add your handling code here:
+         showPanel(new JobPosition());
+
     }//GEN-LAST:event_JobPositionsActionPerformed
 
     //Dynamic showpanel
@@ -273,7 +258,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Attendance;
-    private javax.swing.JButton DashboardBtn;
     private javax.swing.JButton JobPositions;
     private javax.swing.JButton Leave;
     private javax.swing.JButton Logout;

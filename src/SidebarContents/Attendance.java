@@ -250,6 +250,12 @@ public class Attendance extends javax.swing.JPanel {
             }
         });
 
+        SearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SearchFieldKeyTyped(evt);
+            }
+        });
+
         jLabel1.setText("Search:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -415,6 +421,12 @@ public class Attendance extends javax.swing.JPanel {
     private void BulkTimeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BulkTimeOutActionPerformed
         MassTimeOut() ;
     }//GEN-LAST:event_BulkTimeOutActionPerformed
+
+    private void SearchFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchFieldKeyTyped
+      if (SearchField.getText().length() >= 25) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_SearchFieldKeyTyped
     private void MassTimeIn() {
         int confirm = JOptionPane.showConfirmDialog(
                 this,
