@@ -1,15 +1,29 @@
 
 package SidebarContents;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Salary extends javax.swing.JPanel {
 
@@ -285,11 +299,15 @@ public class Salary extends javax.swing.JPanel {
 
     private void AddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddBtnActionPerformed
        
-        GenerateSalary();
+        try {
+            GenerateSalary();
+        } catch (IOException ex) {
+            Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_AddBtnActionPerformed
     
     //Generate all the salary
-    private void GenerateSalary(){
+    private void GenerateSalary() throws IOException{
         
         PreparedStatement pst = null;
         Connection con = DatabaseConnection.Database.getConnection();
@@ -347,12 +365,118 @@ public class Salary extends javax.swing.JPanel {
                  JOptionPane.showMessageDialog(null, "Generate salary successfully!");
                  LoadData();
                  Clear(); 
+                 
+                 // ✅ Fetch the generated salary info for PDF
+                String fetchQuery = "SELECT s.SalaryID, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, e.Gmail, e.Contact, e.Address, s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued " +
+                                    "FROM salaries s INNER JOIN employee e ON s.EmpId = e.EmpId WHERE s.EmpId = ? ORDER BY s.SalaryID DESC LIMIT 1";
+                PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+                fetchStmt.setInt(1, empId);
+                ResultSet data = fetchStmt.executeQuery();
+
+                if (data.next()) {
+                     try {
+                         generateSalaryPDF(
+                                 data.getString("FullName"),
+                                 data.getString("Gmail"),
+                                 data.getString("Contact"),
+                                 data.getString("Address"),
+                                 data.getDouble("BaseSalary"),
+                                 data.getDouble("OvertimePay"),
+                                 data.getDouble("Deductions"),
+                                 data.getDouble("NetSalary"),
+                                 data.getString("DateIssued")
+                         );
+                     } catch (DocumentException ex) {
+                         Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                }
             }
         } catch (SQLException ex) {
             
             ex.printStackTrace();
         }
     }
+    
+    
+   private void generateSalaryPDF(String fullName, String gmail, String contact, String address,
+                               double baseSalary, double overtime, double deductions, double netSalary,
+                               String dateIssued) throws IOException, DocumentException {
+
+    Document document = new Document();
+    String fileName = "SalarySlip_" + fullName.replace(" ", "_") + ".pdf";
+    File file = new File(fileName);
+    PdfWriter.getInstance(document, new FileOutputStream(file));
+
+    document.open();
+
+    // ✅ Company Logo
+    try {
+        Image logo = Image.getInstance("src/hrm.png"); // Update with your actual logo path
+        logo.scaleToFit(100, 100);
+        logo.setAlignment(Element.ALIGN_CENTER);
+        document.add(logo);
+    } catch (Exception e) {
+        // Skip logo if not found
+        System.out.println("Logo not found or failed to load.");
+    }
+
+    // ✅ Company Info
+    Paragraph companyInfo = new Paragraph(
+        "EMP COMPANY\n" +
+        "#725 Quezon Blvd. Zone 030 Brgy. 308 Quiapo, Manila\n" +
+        "Contact: 0912-345-6789\n\n",
+        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK)
+    );
+    companyInfo.setAlignment(Element.ALIGN_CENTER);
+    document.add(companyInfo);
+
+    // ✅ Title
+    Paragraph title = new Paragraph("EMPLOYEE SALARY SLIP\n\n",
+        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK));
+    title.setAlignment(Element.ALIGN_CENTER);
+    document.add(title);
+
+    // ✅ Employee Info
+    document.add(new Paragraph("Name: " + fullName));
+    document.add(new Paragraph("Email: " + gmail));
+    document.add(new Paragraph("Contact: " + contact));
+    document.add(new Paragraph("Address: " + address));
+    document.add(new Paragraph("Date Issued: " + dateIssued + "\n\n"));
+
+    // ✅ Salary Table
+    PdfPTable table = new PdfPTable(2);
+    table.setWidthPercentage(80);
+    table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+    table.addCell("Base Salary");
+    table.addCell("₱" + String.format("%.2f", baseSalary));
+    table.addCell("Overtime Pay");
+    table.addCell("₱" + String.format("%.2f", overtime));
+    table.addCell("Deductions");
+    table.addCell("₱" + String.format("%.2f", deductions));
+    table.addCell("Net Salary");
+    table.addCell("₱" + String.format("%.2f", netSalary));
+
+    document.add(table);
+
+    // ✅ Footer
+    Paragraph footer = new Paragraph(
+        "\nThis document is system-generated and does not require a signature.",
+        FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, BaseColor.GRAY)
+    );
+    footer.setAlignment(Element.ALIGN_CENTER);
+    document.add(footer);
+
+    document.close();
+
+    // ✅ Open the PDF automatically
+    if (Desktop.isDesktopSupported()) {
+        Desktop.getDesktop().open(file);
+    } else {
+        JOptionPane.showMessageDialog(null, "PDF generated successfully, but cannot open automatically.");
+    }
+}
+
     
     //Search employee
     private void Search(String keyword) {
