@@ -3,6 +3,7 @@ import SidebarContents.Attendance;
 import SidebarContents.EmployeeManagement;
 import SidebarContents.OverView;
 import SidebarContents.Salary;
+import SidebarContents.Users;
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,7 +27,7 @@ public class Dashboard extends javax.swing.JFrame {
         DashboardBtn = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         SalaryBtn = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        UsersBtn = new javax.swing.JButton();
         Attendance = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         Leave = new javax.swing.JButton();
@@ -68,13 +69,13 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jButton8.setBackground(new java.awt.Color(255, 255, 255));
-        jButton8.setForeground(new java.awt.Color(0, 153, 255));
-        jButton8.setText("Users");
-        jButton8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        UsersBtn.setBackground(new java.awt.Color(255, 255, 255));
+        UsersBtn.setForeground(new java.awt.Color(0, 153, 255));
+        UsersBtn.setText("Users");
+        UsersBtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        UsersBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                UsersBtnActionPerformed(evt);
             }
         });
 
@@ -130,7 +131,7 @@ public class Dashboard extends javax.swing.JFrame {
                         .addGap(25, 25, 25)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Attendance, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(UsersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(SalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(DashboardBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -154,7 +155,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(SalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(UsersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(Attendance, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -202,9 +203,10 @@ public class Dashboard extends javax.swing.JFrame {
            showPanel(new EmployeeManagement());
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+    private void UsersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsersBtnActionPerformed
+        showPanel(new Users());
+
+    }//GEN-LAST:event_UsersBtnActionPerformed
 
     private void AttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AttendanceActionPerformed
         
@@ -277,8 +279,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton Logout;
     private javax.swing.JPanel MainContentPanel;
     private javax.swing.JButton SalaryBtn;
+    private javax.swing.JButton UsersBtn;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

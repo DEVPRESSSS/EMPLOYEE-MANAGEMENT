@@ -54,7 +54,7 @@
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="Attendance" min="-2" pref="150" max="-2" attributes="0"/>
-                              <Component id="jButton8" min="-2" pref="150" max="-2" attributes="0"/>
+                              <Component id="UsersBtn" min="-2" pref="150" max="-2" attributes="0"/>
                               <Component id="SalaryBtn" min="-2" pref="150" max="-2" attributes="0"/>
                               <Component id="jButton6" min="-2" pref="150" max="-2" attributes="0"/>
                               <Component id="DashboardBtn" min="-2" pref="150" max="-2" attributes="0"/>
@@ -84,7 +84,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="SalaryBtn" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="jButton8" min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="UsersBtn" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="Attendance" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -162,7 +162,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SalaryBtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton8">
+        <Component class="javax.swing.JButton" name="UsersBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -180,7 +180,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton8ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="UsersBtnActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="Attendance">
