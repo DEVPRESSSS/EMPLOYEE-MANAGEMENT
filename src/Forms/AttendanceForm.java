@@ -244,10 +244,11 @@ public class AttendanceForm extends javax.swing.JFrame {
 
         try {
             String checkSql = "SELECT AttendanceId FROM attendance " +
-                              "WHERE EmpId = ? " +
-                              "AND DATE(Date) = CURDATE() " +
-                              "AND Status = 'Present' " +
-                              "AND (TimeOut IS NULL OR TimeOut = '')";
+                  "WHERE EmpId = ? " +
+                  "AND DATE(Date) = CURDATE() " +
+                  "AND Status IN ('Present', 'Late') " +
+                  "AND (TimeOut IS NULL OR TimeOut = '')";
+
             pst = con.prepareStatement(checkSql);
             pst.setInt(1, empId);
             rs = pst.executeQuery();

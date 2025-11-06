@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2025 at 05:49 PM
+-- Generation Time: Nov 02, 2025 at 06:04 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,7 +33,8 @@ CREATE TABLE `appusers` (
   `Username` varchar(50) NOT NULL,
   `Password` varchar(40) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `Contact` int(40) NOT NULL,
+  `Contact` varchar(40) NOT NULL,
+  `RoleName` varchar(30) DEFAULT NULL,
   `Created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -41,8 +42,8 @@ CREATE TABLE `appusers` (
 -- Dumping data for table `appusers`
 --
 
-INSERT INTO `appusers` (`UserId`, `Name`, `Username`, `Password`, `email`, `Contact`, `Created`) VALUES
-(1, 'Oogy', 'Ogoy', '123', 'ogoychristopher2@gmail.com', 94887492, '2025-10-26 16:25:48');
+INSERT INTO `appusers` (`UserId`, `Name`, `Username`, `Password`, `email`, `Contact`, `RoleName`, `Created`) VALUES
+(3, 'Ogoy', 'Ogoy', '123', 'ogoychristopher@gmail.com', '0983674734673', 'Admin', '2025-11-02 12:53:08');
 
 -- --------------------------------------------------------
 
@@ -56,20 +57,10 @@ CREATE TABLE `attendance` (
   `Date` date NOT NULL,
   `TimeIn` time DEFAULT NULL,
   `TimeOut` time DEFAULT NULL,
-  `Status` enum('Present','Absent','Late','On Leave') DEFAULT 'Present',
+  `Status` varchar(50) NOT NULL DEFAULT 'No Attendance yet',
   `Overtime` int(11) DEFAULT NULL,
   `Remarks` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `attendance`
---
-
-INSERT INTO `attendance` (`AttendanceId`, `EmpId`, `Date`, `TimeIn`, `TimeOut`, `Status`, `Overtime`, `Remarks`) VALUES
-(1, 20, '2025-10-31', NULL, NULL, 'Absent', NULL, NULL),
-(2, 20, '0000-00-00', NULL, NULL, 'Absent', NULL, NULL),
-(3, 20, '2025-10-31', NULL, NULL, 'Absent', NULL, NULL),
-(4, 18, '2025-10-31', NULL, NULL, 'Present', 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -111,16 +102,9 @@ CREATE TABLE `employee` (
   `Gender` varchar(30) NOT NULL,
   `JobPosition` varchar(100) DEFAULT NULL,
   `Status` varchar(30) NOT NULL,
+  `Days` varchar(30) DEFAULT NULL,
   `Created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `employee`
---
-
-INSERT INTO `employee` (`EmpId`, `FirstName`, `MiddleName`, `LastName`, `Contact`, `Gmail`, `Address`, `DepartmentId`, `PositionId`, `HireDate`, `Gender`, `JobPosition`, `Status`, `Created`) VALUES
-(18, 'sdfsd', 'sdf', 'sdfsdf', '22222222222', '22222222222', '22222222222', 3, 2, NULL, 'Female', NULL, 'Active', '2025-10-31 04:31:46'),
-(20, 'Jerald', 'Rabino', 'Montemor', '09488749263', 'xmont@gmail.com', 'sdfsdfsdf', 1, 1, NULL, 'Female', NULL, 'Active', '2025-10-31 05:30:50');
 
 -- --------------------------------------------------------
 
@@ -159,7 +143,7 @@ CREATE TABLE `position` (
 
 INSERT INTO `position` (`PositionId`, `DepartmentId`, `PositionName`, `SalaryRate`, `CreatedAt`) VALUES
 (1, 1, 'Quality Assurance', 600000.00, '2025-10-30 13:23:53'),
-(2, 1, 'Programmer', 200000.00, '2025-10-31 03:03:09');
+(2, 1, 'IT Department', 200000.00, '2025-11-02 16:08:39');
 
 -- --------------------------------------------------------
 
@@ -178,15 +162,6 @@ CREATE TABLE `salaries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `salaries`
---
-
-INSERT INTO `salaries` (`SalaryID`, `EmpId`, `BaseSalary`, `OvertimePay`, `Deductions`, `DateIssued`) VALUES
-(12, 20, 600000.00, 0.00, 2085.00, '2025-10-31'),
-(13, 18, 200000.00, 405.00, 0.00, '2025-10-31'),
-(14, 20, 80000.00, 0.00, 0.00, '2025-10-30');
-
---
 -- Indexes for dumped tables
 --
 
@@ -197,6 +172,7 @@ ALTER TABLE `appusers`
   ADD PRIMARY KEY (`UserId`),
   ADD UNIQUE KEY `Username` (`Username`),
   ADD UNIQUE KEY `Name` (`Name`),
+  ADD UNIQUE KEY `email` (`email`),
   ADD KEY `Contact` (`Contact`);
 
 --
@@ -249,13 +225,13 @@ ALTER TABLE `salaries`
 -- AUTO_INCREMENT for table `appusers`
 --
 ALTER TABLE `appusers`
-  MODIFY `UserId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `UserId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `AttendanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `AttendanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `department`
@@ -267,7 +243,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `EmpId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `EmpId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `leaves`
@@ -279,13 +255,13 @@ ALTER TABLE `leaves`
 -- AUTO_INCREMENT for table `position`
 --
 ALTER TABLE `position`
-  MODIFY `PositionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PositionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `salaries`
 --
 ALTER TABLE `salaries`
-  MODIFY `SalaryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `SalaryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables

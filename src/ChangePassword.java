@@ -93,6 +93,11 @@ public class ChangePassword extends javax.swing.JFrame {
         });
 
         jCheckBox1.setText("Show password");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -185,6 +190,17 @@ public class ChangePassword extends javax.swing.JFrame {
         
         this.dispose();
     }//GEN-LAST:event_BackBtnActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        if(jCheckBox1.isSelected()){
+            
+            Password.setEchoChar((char)0);
+            ConfirmPassword.setEchoChar((char)0);
+        }else{
+            Password.setEchoChar('•');
+            ConfirmPassword.setEchoChar('•');
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void ValidatePasswordMatching(){
         

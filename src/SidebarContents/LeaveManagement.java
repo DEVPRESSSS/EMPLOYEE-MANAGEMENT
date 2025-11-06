@@ -258,7 +258,7 @@ public class LeaveManagement extends javax.swing.JPanel {
             rs = pst.executeQuery();
 
             DefaultTableModel model = (DefaultTableModel) LeaveTbl.getModel();
-            model.setRowCount(0); // clear table
+            model.setRowCount(0); 
 
             while (rs.next()) {
                 Object[] row = new Object[7];

@@ -413,7 +413,6 @@ public class Attendance extends javax.swing.JPanel {
 
     private void BulkTimeInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BulkTimeInActionPerformed
        
-        //Time In all those employee who's status in attendance are empty
         MassTimeIn();
         
     }//GEN-LAST:event_BulkTimeInActionPerformed
@@ -510,7 +509,7 @@ public class Attendance extends javax.swing.JPanel {
          String findSql = "SELECT a.AttendanceId, a.EmpId " +
                           "FROM attendance a " +
                           "WHERE DATE(a.Date) = CURDATE() " +
-                          "AND a.Status = 'Present' " +
+                          "AND a.Status IN ('Present', 'Late') " +
                           "AND (a.TimeOut IS NULL OR a.TimeOut = '')";
          pst = con.prepareStatement(findSql);
          rs = pst.executeQuery();

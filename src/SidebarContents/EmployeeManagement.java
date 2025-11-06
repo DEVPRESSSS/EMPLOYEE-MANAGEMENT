@@ -690,112 +690,97 @@ public class EmployeeManagement extends javax.swing.JPanel {
     }
 
     //Insert function 
-    private void Insert() {
-        PreparedStatement pst = null;
-        Connection con = DatabaseConnection.Database.getConnection();
-        
-        int selectedIndex = Department.getSelectedIndex();
-        if (selectedIndex == -1) {
-            JOptionPane.showMessageDialog(null, "Please select a department.");
-            return;
-        }
+    //Insert function 
+private void Insert() {
+    PreparedStatement pst = null;
+    Connection con = DatabaseConnection.Database.getConnection();
 
-        int departmentId = departmentIds.get(selectedIndex);
-        System.out.println("Selected Department ID: " + departmentId);
-        
-        try {
+    int selectedDeptIndex = Department.getSelectedIndex();
+    int selectedPosIndex = Position.getSelectedIndex();
 
-            if (FirstName.getText().trim().isEmpty()) {
+    if (selectedDeptIndex == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a department.");
+        return;
+    }
+    if (selectedPosIndex == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a position.");
+        return;
+    }
+
+    int departmentId = departmentIds.get(selectedDeptIndex);
+    int positionID = positionId.get(selectedPosIndex); // ✅ Get position properly
+
+    try {
+        // Validation...
+        if (FirstName.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter First Name.");
             FirstName.requestFocus();
             return;
-            }
-            if (MiddleName.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter Middle Name.");
-                MiddleName.requestFocus();
-                return;
-            }
-            if (LastName.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter Last Name.");
-                LastName.requestFocus();
-                return;
-            }
-            if (Contact.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter Contact Number.");
-                Contact.requestFocus();
-                return;
-            }
-            if (Gmail.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter Gmail.");
-                Gmail.requestFocus();
-                return;
-            }
-            if (Address.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter Address.");
-                Address.requestFocus();
-                return;
-            }
-
-            if (Department.getSelectedIndex() == -1) {
-                JOptionPane.showMessageDialog(null, "Please select a Department.");
-                Department.requestFocus();
-                return;
-            }
-            if (Gender.getSelectedIndex() == -1) {
-                JOptionPane.showMessageDialog(null, "Please select Gender.");
-                Gender.requestFocus();
-                return;
-            }
-            if (Status.getSelectedIndex() == -1) {
-                JOptionPane.showMessageDialog(null, "Please select Status.");
-                Status.requestFocus();
-                return;
-            }
-            
-            String text = Gmail.getText().trim().toLowerCase();
-            if (!text.endsWith("@gmail.com")) {
-                Gmail.setText("");  
-                return;
-            } else {
-                Gmail.setBackground(Color.WHITE); // valid
-            }
-    
-
-            String sql = "INSERT INTO employee (FirstName, MiddleName, LastName, Contact, Gmail, Address, DepartmentId, PositionId, Gender, Status, Created) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
-
-            pst = con.prepareStatement(sql);
-
-            pst.setString(1, FirstName.getText());
-            pst.setString(2, MiddleName.getText());
-            pst.setString(3, LastName.getText());
-            pst.setString(4, Contact.getText());
-            pst.setString(5, text);
-            pst.setString(6, Address.getText());
-            pst.setInt(7,departmentId);
-            pst.setInt(8, 1);
-            pst.setString(9, Gender.getSelectedItem().toString());
-            pst.setString(10, Status.getSelectedItem().toString());
-
-            int rowsInserted = pst.executeUpdate();
-            if (rowsInserted > 0) {
-                
-                JOptionPane.showMessageDialog(null, "Employee added successfully!");
-                LoadData();
-                Clear(); 
-            }
-
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error inserting employee: " + e.getMessage());
-            Clear();
-        } finally {
-            try {
-                if (pst != null) pst.close();
-                if (con != null) con.close();
-            } catch (SQLException ex) {
-            }
         }
+        if (MiddleName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Middle Name.");
+            MiddleName.requestFocus();
+            return;
+        }
+        if (LastName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Last Name.");
+            LastName.requestFocus();
+            return;
+        }
+        if (Contact.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Contact Number.");
+            Contact.requestFocus();
+            return;
+        }
+        if (Gmail.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Gmail.");
+            Gmail.requestFocus();
+            return;
+        }
+        if (Address.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Address.");
+            Address.requestFocus();
+            return;
+        }
+
+        String text = Gmail.getText().trim().toLowerCase();
+        if (!text.endsWith("@gmail.com")) {
+            JOptionPane.showMessageDialog(null, "Invalid Gmail format.");
+            Gmail.requestFocus();
+            return;
+        }
+
+        String sql = "INSERT INTO employee (FirstName, MiddleName, LastName, Contact, Gmail, Address, DepartmentId, PositionId, Gender, Status, Created) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
+        pst = con.prepareStatement(sql);
+        pst.setString(1, FirstName.getText());
+        pst.setString(2, MiddleName.getText());
+        pst.setString(3, LastName.getText());
+        pst.setString(4, Contact.getText());
+        pst.setString(5, text);
+        pst.setString(6, Address.getText());
+        pst.setInt(7, departmentId);
+        pst.setInt(8, positionID); // ✅ use actual position from combobox
+        pst.setString(9, Gender.getSelectedItem().toString());
+        pst.setString(10, Status.getSelectedItem().toString());
+
+        int rowsInserted = pst.executeUpdate();
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(null, "Employee added successfully!");
+            LoadData();
+            Clear(); 
+        }
+
+    } catch (HeadlessException | SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error inserting employee: " + e.getMessage());
+    } finally {
+        try {
+            if (pst != null) pst.close();
+            if (con != null) con.close();
+        } catch (SQLException ex) {}
     }
+}
 
     //Clear all fields
     private void Clear(){
@@ -852,10 +837,12 @@ public class EmployeeManagement extends javax.swing.JPanel {
         try {
 
 
-            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, d.DepartmentName as DeptName, p.PositionName as Name, e.Gender, e.Status, e.Created, e.Days " +
+            String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, e.Contact, e.Gmail, e.Address, " +
+             "d.DepartmentName AS DeptName, p.PositionName AS Name, e.Gender, e.Status, " +
+             "DATE_FORMAT(e.Created, '%m/%d/%y %l:%i %p') AS Created, e.Days " +
              "FROM employee e " +
              "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
-             "INNER JOIN position p ON e.PositionId = p.PositionId" ;
+             "INNER JOIN position p ON e.PositionId = p.PositionId";
              
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -877,7 +864,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 row[9] = rs.getString("Gender");
                 row[10] = rs.getString("Status");
                 row[11] = rs.getString("Days");
-                row[12] = rs.getTimestamp("Created");
+                row[12] = rs.getString("Created");
 
                 model.addRow(row);
             }
@@ -937,14 +924,14 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
         try {
             String sql = "SELECT e.EmpId, e.FirstName, e.MiddleName, e.LastName, " +
-                         "e.Contact, e.Gmail, e.Address, " +
-                         "d.DepartmentName AS DeptName, " +
-                         "p.PositionName AS Name, " +
-                         "e.Gender, e.Status, e.Created, e.Days " +
-                         "FROM employee e " +
-                         "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
-                         "INNER JOIN position p ON e.PositionId = p.PositionId " +
-                         "WHERE CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) LIKE ?";
+             "e.Contact, e.Gmail, e.Address, " +
+             "d.DepartmentName AS DeptName, " +
+             "p.PositionName AS Name, " +
+             "e.Gender, e.Status, DATE_FORMAT(e.Created, '%m/%d/%y %l:%i %p') AS Created, e.Days " +
+             "FROM employee e " +
+             "INNER JOIN department d ON e.DepartmentId = d.DepartmentId " +
+             "INNER JOIN position p ON e.PositionId = p.PositionId " +
+             "WHERE CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) LIKE ?";
 
             pst = con.prepareStatement(sql);
             pst.setString(1, "%" + keyword + "%"); 
@@ -967,7 +954,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
                 row[9] = rs.getString("Gender");
                 row[10] = rs.getString("Status");
                 row[11] = rs.getString("Days");
-                row[12] = rs.getTimestamp("Created");
+                row[12] = rs.getString("Created");
                 model.addRow(row);
             }
 

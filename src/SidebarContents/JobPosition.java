@@ -427,45 +427,46 @@ public class JobPosition extends javax.swing.JPanel {
     }
 
     private void LoadPositionData() {
-    Connection con = DatabaseConnection.Database.getConnection();
-    PreparedStatement pst = null;
-    ResultSet rs = null;
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
-    try {
-        String sql = "SELECT p.PositionId, p.PositionName, p.SalaryRate, p.CreatedAt, " +
-                     "d.DepartmentName AS DeptName " +
-                     "FROM position p " +
-                     "INNER JOIN department d ON p.DepartmentId = d.DepartmentId";
-
-        pst = con.prepareStatement(sql);
-        rs = pst.executeQuery();
-
-        DefaultTableModel model = (DefaultTableModel) PositionTable.getModel();
-        model.setRowCount(0); // Clear existing rows
-
-        while (rs.next()) {
-            Object[] row = new Object[5];
-            row[0] = rs.getInt("PositionId");
-            row[1] = rs.getString("PositionName");
-            row[2] = rs.getString("DeptName");
-            row[3] = rs.getDouble("SalaryRate");
-            row[4] = rs.getTimestamp("CreatedAt");
-
-            model.addRow(row);
-        }
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error loading position data: " + e.getMessage());
-    } finally {
         try {
-            if (rs != null) rs.close();
-            if (pst != null) pst.close();
-            if (con != null) con.close();
-        } catch (SQLException ex) {
-            // ignore
+            String sql = "SELECT p.PositionId, p.PositionName, p.SalaryRate, " +
+                         "DATE_FORMAT(p.CreatedAt, '%m/%d/%y %l:%i %p') AS CreatedAt, " + // format datetime
+                         "d.DepartmentName AS DeptName " +
+                         "FROM position p " +
+                         "INNER JOIN department d ON p.DepartmentId = d.DepartmentId";
+
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            DefaultTableModel model = (DefaultTableModel) PositionTable.getModel();
+            model.setRowCount(0); // Clear existing rows
+
+            while (rs.next()) {
+                Object[] row = new Object[5];
+                row[0] = rs.getInt("PositionId");
+                row[1] = rs.getString("DeptName");         // Department
+                row[2] = rs.getString("PositionName");     // Job Position
+                row[3] = rs.getDouble("SalaryRate");       // Salary
+                row[4] = rs.getString("CreatedAt");        // Formatted date/time
+
+                model.addRow(row);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading position data: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                // ignore
+            }
         }
     }
-}
 
     
     private final List<Integer> departmentIds =new ArrayList<>();

@@ -298,8 +298,8 @@ public class Salary extends javax.swing.JPanel {
     }//GEN-LAST:event_SearchEmployeeInputMethodTextChanged
 
     private void AddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddBtnActionPerformed
-       
-        try {
+               
+       try {
             GenerateSalary();
         } catch (IOException ex) {
             Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
@@ -307,96 +307,115 @@ public class Salary extends javax.swing.JPanel {
     }//GEN-LAST:event_AddBtnActionPerformed
     
     //Generate all the salary
-    private void GenerateSalary() throws IOException{
-        
-        PreparedStatement pst = null;
-        Connection con = DatabaseConnection.Database.getConnection();
-        
-        try {
-            String input = Overpay.getText();
-            String inputDeduction = Deductions.getText();
-            String inputBaseSalary = BaseSalary.getText();
-            
-            double overpayValue =0;
-            double deductionValue =0;
-            double baseSalaryValue = 0;
-            
-            //Check first if the employee has no salary yet            
-            String checkQuery = "SELECT COUNT(*) FROM salaries WHERE EmpId = ? AND MONTH(DateIssued) = MONTH(CURDATE()) AND YEAR(DateIssued) = YEAR(CURDATE())";
-            PreparedStatement checkStmt = con.prepareStatement(checkQuery);     
-            checkStmt.setInt(1, empId);
+    //Generate all the salary
+private void GenerateSalary() throws IOException {
+    PreparedStatement pst = null;
+    Connection con = DatabaseConnection.Database.getConnection();
 
-            ResultSet rs = checkStmt.executeQuery();
-            rs.next();
-            if (rs.getInt(1) > 0) {
-                JOptionPane.showMessageDialog(this, "This employee already has a salary record for this month!");
+    try {
+        String input = Overpay.getText();
+        String inputDeduction = Deductions.getText();
+        String inputBaseSalary = BaseSalary.getText();
+
+        double overpayValue = 0;
+        double deductionValue = 0;
+        double baseSalaryValue = 0;
+
+        // 🛑 1️⃣ Check if employee exists and if status is active
+        String statusQuery = "SELECT Status FROM employee WHERE EmpId = ?";
+        PreparedStatement statusStmt = con.prepareStatement(statusQuery);
+        statusStmt.setInt(1, empId);
+        ResultSet statusRs = statusStmt.executeQuery();
+
+        if (statusRs.next()) {
+            String status = statusRs.getString("Status");
+            if (status.equalsIgnoreCase("Terminated") || status.equalsIgnoreCase("Resigned") || status.equalsIgnoreCase("Inactive")) {
+                JOptionPane.showMessageDialog(this,
+                        "Cannot generate salary. Employee is " + status + "!",
+                        "Access Denied", JOptionPane.WARNING_MESSAGE);
                 Clear();
-                return;
+                return; // stop execution
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Employee not found!");
+            return;
+        }
 
-            
-            
-            if(!input.isEmpty() && !inputDeduction.isEmpty() && !inputBaseSalary.isEmpty()){
-                input = input.replace("₱","").trim();
-                inputDeduction= inputDeduction.replace("₱","").trim();
-                inputBaseSalary= inputBaseSalary.replace("₱","").trim();
-                
-                overpayValue= Double.parseDouble(input);
-                deductionValue = Double.parseDouble(inputDeduction);
-                baseSalaryValue = Double.parseDouble(inputBaseSalary);
-            }
-            
-           
-            String sql = "INSERT INTO salaries (EmpId, BaseSalary, OvertimePay, Deductions, DateIssued) " +
-                    "VALUES (?, ?, ?, ?, NOW())";
-            
-         
-            pst = con.prepareStatement(sql);
+        // 🛑 2️⃣ Check if already has salary for this month
+        String checkQuery = "SELECT COUNT(*) FROM salaries WHERE EmpId = ? " +
+                            "AND MONTH(DateIssued) = MONTH(CURDATE()) " +
+                            "AND YEAR(DateIssued) = YEAR(CURDATE())";
+        PreparedStatement checkStmt = con.prepareStatement(checkQuery);
+        checkStmt.setInt(1, empId);
+        ResultSet rs = checkStmt.executeQuery();
+        rs.next();
+        if (rs.getInt(1) > 0) {
+            JOptionPane.showMessageDialog(this,
+                    "This employee already has a salary record for this month!");
+            Clear();
+            return;
+        }
 
-            pst.setInt(1, empId);
-            pst.setDouble(2,baseSalaryValue);
-            pst.setDouble(3, overpayValue);
-            pst.setDouble(4, deductionValue);
-           
+        // 3️⃣ Convert inputs
+        if (!input.isEmpty() && !inputDeduction.isEmpty() && !inputBaseSalary.isEmpty()) {
+            input = input.replace("₱", "").trim();
+            inputDeduction = inputDeduction.replace("₱", "").trim();
+            inputBaseSalary = inputBaseSalary.replace("₱", "").trim();
 
-            int rowsInserted = pst.executeUpdate();
-            if (rowsInserted > 0) {
-                
-                 JOptionPane.showMessageDialog(null, "Generate salary successfully!");
-                 LoadData();
-                 Clear(); 
-                 
-                 // ✅ Fetch the generated salary info for PDF
-                String fetchQuery = "SELECT s.SalaryID, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, e.Gmail, e.Contact, e.Address, s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued " +
-                                    "FROM salaries s INNER JOIN employee e ON s.EmpId = e.EmpId WHERE s.EmpId = ? ORDER BY s.SalaryID DESC LIMIT 1";
-                PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
-                fetchStmt.setInt(1, empId);
-                ResultSet data = fetchStmt.executeQuery();
+            overpayValue = Double.parseDouble(input);
+            deductionValue = Double.parseDouble(inputDeduction);
+            baseSalaryValue = Double.parseDouble(inputBaseSalary);
+        }
 
-                if (data.next()) {
-                     try {
-                         generateSalaryPDF(
-                                 data.getString("FullName"),
-                                 data.getString("Gmail"),
-                                 data.getString("Contact"),
-                                 data.getString("Address"),
-                                 data.getDouble("BaseSalary"),
-                                 data.getDouble("OvertimePay"),
-                                 data.getDouble("Deductions"),
-                                 data.getDouble("NetSalary"),
-                                 data.getString("DateIssued")
-                         );
-                     } catch (DocumentException ex) {
-                         Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
-                     }
+        // 4️⃣ Insert salary
+        String sql = "INSERT INTO salaries (EmpId, BaseSalary, OvertimePay, Deductions, DateIssued) " +
+                     "VALUES (?, ?, ?, ?, NOW())";
+        pst = con.prepareStatement(sql);
+        pst.setInt(1, empId);
+        pst.setDouble(2, baseSalaryValue);
+        pst.setDouble(3, overpayValue);
+        pst.setDouble(4, deductionValue);
+
+        int rowsInserted = pst.executeUpdate();
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(null, "Salary generated successfully!");
+            LoadData();
+            Clear();
+
+            // ✅ Fetch the generated salary info for PDF
+            String fetchQuery = "SELECT s.SalaryID, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, " +
+                                "e.Gmail, e.Contact, e.Address, s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued " +
+                                "FROM salaries s " +
+                                "INNER JOIN employee e ON s.EmpId = e.EmpId " +
+                                "WHERE s.EmpId = ? ORDER BY s.SalaryID DESC LIMIT 1";
+            PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+            fetchStmt.setInt(1, empId);
+            ResultSet data = fetchStmt.executeQuery();
+
+            if (data.next()) {
+                try {
+                    generateSalaryPDF(
+                        data.getString("FullName"),
+                        data.getString("Gmail"),
+                        data.getString("Contact"),
+                        data.getString("Address"),
+                        data.getDouble("BaseSalary"),
+                        data.getDouble("OvertimePay"),
+                        data.getDouble("Deductions"),
+                        data.getDouble("NetSalary"),
+                        data.getString("DateIssued")
+                    );
+                } catch (DocumentException ex) {
+                    Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        } catch (SQLException ex) {
-            
-            ex.printStackTrace();
         }
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error generating salary: " + ex.getMessage());
     }
-    
+}
     
    private void generateSalaryPDF(String fullName, String gmail, String contact, String address,
                                double baseSalary, double overtime, double deductions, double netSalary,

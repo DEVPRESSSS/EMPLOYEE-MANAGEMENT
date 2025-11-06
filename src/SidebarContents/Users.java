@@ -402,12 +402,10 @@ public class Users extends javax.swing.JPanel {
     
     
     //Get selected row
-    private void GetSelectedRow(){
-        
-        
+    private void GetSelectedRow() {
         selectedRow = UsersTable.getSelectedRow();
-        System.out.print(selectedRow);
-        
+        if (selectedRow == -1) return;
+
         DefaultTableModel model = (DefaultTableModel) UsersTable.getModel();
         appUserId = Integer.parseInt(model.getValueAt(selectedRow, 0).toString());
         Name.setText(model.getValueAt(selectedRow, 1).toString());
@@ -415,7 +413,7 @@ public class Users extends javax.swing.JPanel {
         Password.setText(model.getValueAt(selectedRow, 3).toString());
         Contact.setText(model.getValueAt(selectedRow, 4).toString());
         Email.setText(model.getValueAt(selectedRow, 5).toString());
-        RoleCb.setSelectedItem(model.getValueAt(selectedRow, 7).toString());
+        RoleCb.setSelectedItem(model.getValueAt(selectedRow, 6).toString()); // ✅ fixed index
     }
     
     //Load all users except admin record    
@@ -430,8 +428,11 @@ public class Users extends javax.swing.JPanel {
         try {
 
 
-            String sql = "SELECT UserId, Name, Username, Password , Contact, email, RoleName, Created FROM appusers WHERE RoleName <> 'Admin'";
-                     
+        String sql = "SELECT UserId, Name, Username, Password, Contact, Email, RoleName, " +
+                     "DATE_FORMAT(Created, '%m/%d/%y %l:%i %p') AS Created " +  // 🕐 12-hour format with AM/PM
+                     "FROM appusers " +
+                     "WHERE RoleName <> 'Admin'";
+
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
 
@@ -447,7 +448,7 @@ public class Users extends javax.swing.JPanel {
                 row[4] = rs.getString("Contact");
                 row[5] = rs.getString("email");
                 row[6] = rs.getString("RoleName") != null ? rs.getString("RoleName") : "";
-                row[7] = rs.getTimestamp("Created");
+                row[7] = rs.getString("Created");
               
 
                 model.addRow(row);
@@ -475,10 +476,11 @@ public class Users extends javax.swing.JPanel {
 
         try {
             // SQL with LIKE for searching and excluding Admins
-            String sql = "SELECT UserId, Name, Username, Password, Contact, Email, RoleName, Created "
-                       + "FROM appusers "
-                       + "WHERE RoleName <> 'Admin' "
-                       + "AND (Name LIKE ? OR Username LIKE ? OR Email LIKE ?)";
+            String sql = "SELECT UserId, Name, Username, Password, Contact, Email, RoleName, " +
+             "DATE_FORMAT(Created, '%m/%d/%y %l:%i %p') AS Created " +
+             "FROM appusers " +
+             "WHERE RoleName <> 'Admin' " +
+             "AND (Name LIKE ? OR Username LIKE ? OR Email LIKE ?)";
 
             pst = con.prepareStatement(sql);
             String searchPattern = "%" + searchValue + "%";
@@ -500,7 +502,7 @@ public class Users extends javax.swing.JPanel {
                 row[4] = rs.getString("Contact");
                 row[5] = rs.getString("Email");
                 row[6] = rs.getString("RoleName") != null ? rs.getString("RoleName") : "";
-                row[7] = rs.getTimestamp("Created");
+                row[7] = rs.getString("Created");
 
                 model.addRow(row);
             }
