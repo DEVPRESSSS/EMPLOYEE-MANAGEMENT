@@ -27,6 +27,9 @@ public class Attendance extends javax.swing.JPanel {
         AttendanceTable.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             GetSelectedRow();
+            if (state.equals("Absent")) {
+                return;
+            }
             if(!state.equals("Completed")){
                 
                 OpenTimeInWindow();
@@ -80,11 +83,14 @@ public class Attendance extends javax.swing.JPanel {
     
      private void OpenTimeInWindow(){
         
+             
+              AttendanceForm form = new AttendanceForm(this, empId , state);
+              form.setVisible(true);
 
-        AttendanceForm form = new AttendanceForm(this, empId , state);
-        form.setVisible(true);
+              setTbl();
+         
 
-        setTbl();
+       
         
         
     }

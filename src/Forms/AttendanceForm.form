@@ -84,6 +84,7 @@
                           <Component id="StatusLbl" min="-2" pref="82" max="-2" attributes="0"/>
                           <Component id="TimeOutBtn" alignment="0" pref="228" max="32767" attributes="0"/>
                           <Component id="TimeInBtn" alignment="0" max="32767" attributes="0"/>
+                          <Component id="AbsentBtn" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="91" max="32767" attributes="0"/>
                   </Group>
@@ -98,11 +99,13 @@
                       <Component id="StatusLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="Status" min="-2" pref="35" max="-2" attributes="0"/>
-                      <EmptySpace pref="52" max="32767" attributes="0"/>
+                      <EmptySpace pref="64" max="32767" attributes="0"/>
                       <Component id="TimeInBtn" min="-2" pref="36" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="TimeOutBtn" min="-2" pref="36" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="AbsentBtn" min="-2" pref="39" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -154,6 +157,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TimeInBtnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="AbsentBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="MARK AS ABSENT"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AbsentBtnActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

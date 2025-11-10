@@ -29,6 +29,10 @@ public class AttendanceForm extends javax.swing.JFrame {
              TimeInBtn.setVisible(false);
              StatusLbl.setVisible(false);
             
+        }else{
+            
+            TimeInBtn.setVisible(false);
+            TimeOutBtn.setVisible(false);
         }
         
 
@@ -57,6 +61,7 @@ public class AttendanceForm extends javax.swing.JFrame {
         StatusLbl = new javax.swing.JLabel();
         TimeOutBtn = new javax.swing.JButton();
         TimeInBtn = new javax.swing.JButton();
+        AbsentBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -92,6 +97,13 @@ public class AttendanceForm extends javax.swing.JFrame {
             }
         });
 
+        AbsentBtn.setText("MARK AS ABSENT");
+        AbsentBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AbsentBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -106,7 +118,8 @@ public class AttendanceForm extends javax.swing.JFrame {
                     .addComponent(Status, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(StatusLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TimeOutBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                    .addComponent(TimeInBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(TimeInBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(AbsentBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(91, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -118,11 +131,13 @@ public class AttendanceForm extends javax.swing.JFrame {
                 .addComponent(StatusLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Status, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addComponent(TimeInBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(TimeOutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(AbsentBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -212,6 +227,11 @@ public class AttendanceForm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_TimeOutBtnActionPerformed
 
+    private void AbsentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsentBtnActionPerformed
+        
+        MarkAsAbsent(_empId);
+    }//GEN-LAST:event_AbsentBtnActionPerformed
+
     private void SelectedStatus(){
         
         int statusInput = Status.getSelectedIndex();
@@ -219,12 +239,71 @@ public class AttendanceForm extends javax.swing.JFrame {
             
             TimeInBtn.setEnabled(true);
             TimeOutBtn.setEnabled(true);
+            AbsentBtn.setEnabled(false);
         }else{
              TimeInBtn.setEnabled(false);
              TimeOutBtn.setEnabled(false);
+             AbsentBtn.setEnabled(true);
         }
     }
     
+    //Mark as absent button
+    private void MarkAsAbsent(int empId){
+        
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Do you want to mark as absent this employee?",
+                "Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        PreparedStatement pst = null;
+        Connection con = DatabaseConnection.Database.getConnection();
+        
+        try {
+          
+           
+            String sql = "INSERT INTO attendance (EmpId, Date, TimeIn, Status) VALUES (?, ?, ?, ?)";
+
+            
+            
+            LocalDate currentDate = LocalDate.now();
+            LocalTime currentTime = LocalTime.now();
+
+            java.sql.Date sqlDate = java.sql.Date.valueOf(currentDate);
+
+            java.sql.Time sqlTime = java.sql.Time.valueOf(currentTime);            
+            pst = con.prepareStatement(sql);
+
+            pst.setInt(1, _empId);
+            pst.setDate(2, sqlDate);
+            pst.setTime(3, sqlTime);
+            pst.setString(4, "Absent");
+
+            int rowsInserted = pst.executeUpdate();
+            if (rowsInserted > 0) {
+                
+                 JOptionPane.showMessageDialog(null, "Employee attendance record successfully");
+                 _form.FetchAllEmployee();
+                 
+                 this.dispose();
+                
+            }
+        } catch (SQLException ex) {
+            
+            ex.printStackTrace();
+        }
+        
+        
+    }
+    
+    
+    //Single time out
     private void SingleTimeOut(int empId) {
         int confirm = JOptionPane.showConfirmDialog(
                 this,
@@ -290,6 +369,7 @@ public class AttendanceForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AbsentBtn;
     private javax.swing.JComboBox<String> Status;
     private javax.swing.JLabel StatusLbl;
     private javax.swing.JButton TimeInBtn;
