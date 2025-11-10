@@ -307,239 +307,234 @@ public class Salary extends javax.swing.JPanel {
     }//GEN-LAST:event_AddBtnActionPerformed
     
     //Generate all the salary
-    //Generate all the salary
-private void GenerateSalary() throws IOException {
-    PreparedStatement pst = null;
-    Connection con = DatabaseConnection.Database.getConnection();
+    private void GenerateSalary() throws IOException {
+        PreparedStatement pst = null;
+        Connection con = DatabaseConnection.Database.getConnection();
 
-    try {
-        String input = Overpay.getText();
-        String inputDeduction = Deductions.getText();
-        String inputBaseSalary = BaseSalary.getText();
+        try {
+            String input = Overpay.getText();
+            String inputDeduction = Deductions.getText();
+            String inputBaseSalary = BaseSalary.getText();
 
-        double overpayValue = 0;
-        double deductionValue = 0;
-        double baseSalaryValue = 0;
+            double overpayValue = 0;
+            double deductionValue = 0;
+            double baseSalaryValue = 0;
 
-        // 🛑 1️⃣ Check if employee exists and if status is active
-        String statusQuery = "SELECT Status FROM employee WHERE EmpId = ?";
-        PreparedStatement statusStmt = con.prepareStatement(statusQuery);
-        statusStmt.setInt(1, empId);
-        ResultSet statusRs = statusStmt.executeQuery();
+            // 🛑 1️⃣ Check if employee exists and if status is active
+            String statusQuery = "SELECT Status FROM employee WHERE EmpId = ?";
+            PreparedStatement statusStmt = con.prepareStatement(statusQuery);
+            statusStmt.setInt(1, empId);
+            ResultSet statusRs = statusStmt.executeQuery();
 
-        if (statusRs.next()) {
-            String status = statusRs.getString("Status");
-            if (status.equalsIgnoreCase("Terminated") || status.equalsIgnoreCase("Resigned") || status.equalsIgnoreCase("Inactive")) {
-                JOptionPane.showMessageDialog(this,
-                        "Cannot generate salary. Employee is " + status + "!",
-                        "Access Denied", JOptionPane.WARNING_MESSAGE);
-                Clear();
-                return; // stop execution
+            if (statusRs.next()) {
+                String status = statusRs.getString("Status");
+                if (status.equalsIgnoreCase("Terminated") || status.equalsIgnoreCase("Resigned") || status.equalsIgnoreCase("Inactive")) {
+                    JOptionPane.showMessageDialog(this,
+                            "Cannot generate salary. Employee is " + status + "!",
+                            "Access Denied", JOptionPane.WARNING_MESSAGE);
+                    Clear();
+                    return; // stop execution
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Employee not found!");
+                return;
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Employee not found!");
-            return;
-        }
 
-        // 🛑 2️⃣ Check if already has salary for this month
-        String checkQuery = "SELECT COUNT(*) FROM salaries WHERE EmpId = ? " +
-                            "AND MONTH(DateIssued) = MONTH(CURDATE()) " +
-                            "AND YEAR(DateIssued) = YEAR(CURDATE())";
-        PreparedStatement checkStmt = con.prepareStatement(checkQuery);
-        checkStmt.setInt(1, empId);
-        ResultSet rs = checkStmt.executeQuery();
-        rs.next();
-        if (rs.getInt(1) > 0) {
-            JOptionPane.showMessageDialog(this,
-                    "This employee already has a salary record for this month!");
-            Clear();
-            return;
-        }
+            String checkQuery = "SELECT COUNT(*) FROM salaries WHERE EmpId = ? " +
+                                "AND MONTH(DateIssued) = MONTH(CURDATE()) " +
+                                "AND YEAR(DateIssued) = YEAR(CURDATE())";
+            PreparedStatement checkStmt = con.prepareStatement(checkQuery);
+            checkStmt.setInt(1, empId);
+            ResultSet rs = checkStmt.executeQuery();
+            rs.next();
+            if (rs.getInt(1) > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "This employee already has a salary record for this month!");
+                Clear();
+                return;
+            }
 
-        // 3️⃣ Convert inputs
-        if (!input.isEmpty() && !inputDeduction.isEmpty() && !inputBaseSalary.isEmpty()) {
-            input = input.replace("₱", "").trim();
-            inputDeduction = inputDeduction.replace("₱", "").trim();
-            inputBaseSalary = inputBaseSalary.replace("₱", "").trim();
+            if (!input.isEmpty() && !inputDeduction.isEmpty() && !inputBaseSalary.isEmpty()) {
+                input = input.replace("₱", "").trim();
+                inputDeduction = inputDeduction.replace("₱", "").trim();
+                inputBaseSalary = inputBaseSalary.replace("₱", "").trim();
 
-            overpayValue = Double.parseDouble(input);
-            deductionValue = Double.parseDouble(inputDeduction);
-            baseSalaryValue = Double.parseDouble(inputBaseSalary);
-        }
+                overpayValue = Double.parseDouble(input);
+                deductionValue = Double.parseDouble(inputDeduction);
+                baseSalaryValue = Double.parseDouble(inputBaseSalary);
+            }
 
-        // 4️⃣ Insert salary
-        String sql = "INSERT INTO salaries (EmpId, BaseSalary, OvertimePay, Deductions, DateIssued) " +
-                     "VALUES (?, ?, ?, ?, NOW())";
-        pst = con.prepareStatement(sql);
-        pst.setInt(1, empId);
-        pst.setDouble(2, baseSalaryValue);
-        pst.setDouble(3, overpayValue);
-        pst.setDouble(4, deductionValue);
+            String sql = "INSERT INTO salaries (EmpId, BaseSalary, OvertimePay, Deductions, DateIssued) " +
+                         "VALUES (?, ?, ?, ?, NOW())";
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, empId);
+            pst.setDouble(2, baseSalaryValue);
+            pst.setDouble(3, overpayValue);
+            pst.setDouble(4, deductionValue);
 
-        int rowsInserted = pst.executeUpdate();
-        if (rowsInserted > 0) {
-            JOptionPane.showMessageDialog(null, "Salary generated successfully!");
-            LoadData();
-            Clear();
+            int rowsInserted = pst.executeUpdate();
+            if (rowsInserted > 0) {
+                JOptionPane.showMessageDialog(null, "Salary generated successfully!");
+                LoadData();
+                Clear();
 
-            // ✅ Fetch the generated salary info for PDF
-            String fetchQuery = "SELECT s.SalaryID, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, " +
-                                "e.Gmail, e.Contact, e.Address, s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued " +
-                                "FROM salaries s " +
-                                "INNER JOIN employee e ON s.EmpId = e.EmpId " +
-                                "WHERE s.EmpId = ? ORDER BY s.SalaryID DESC LIMIT 1";
-            PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
-            fetchStmt.setInt(1, empId);
-            ResultSet data = fetchStmt.executeQuery();
+                String fetchQuery = "SELECT s.SalaryID, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, " +
+                                    "e.Gmail, e.Contact, e.Address, s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued " +
+                                    "FROM salaries s " +
+                                    "INNER JOIN employee e ON s.EmpId = e.EmpId " +
+                                    "WHERE s.EmpId = ? ORDER BY s.SalaryID DESC LIMIT 1";
+                PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+                fetchStmt.setInt(1, empId);
+                ResultSet data = fetchStmt.executeQuery();
 
-            if (data.next()) {
-                try {
-                    generateSalaryPDF(
-                        data.getString("FullName"),
-                        data.getString("Gmail"),
-                        data.getString("Contact"),
-                        data.getString("Address"),
-                        data.getDouble("BaseSalary"),
-                        data.getDouble("OvertimePay"),
-                        data.getDouble("Deductions"),
-                        data.getDouble("NetSalary"),
-                        data.getString("DateIssued")
-                    );
-                } catch (DocumentException ex) {
-                    Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
+                if (data.next()) {
+                    try {
+                        generateSalaryPDF(
+                            data.getString("FullName"),
+                            data.getString("Gmail"),
+                            data.getString("Contact"),
+                            data.getString("Address"),
+                            data.getDouble("BaseSalary"),
+                            data.getDouble("OvertimePay"),
+                            data.getDouble("Deductions"),
+                            data.getDouble("NetSalary"),
+                            data.getString("DateIssued")
+                        );
+                    } catch (DocumentException ex) {
+                        Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
-        }
 
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error generating salary: " + ex.getMessage());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error generating salary: " + ex.getMessage());
+        }
     }
-}
     
-   private void generateSalaryPDF(String fullName, String gmail, String contact, String address,
+    private void generateSalaryPDF(String fullName, String gmail, String contact, String address,
                                double baseSalary, double overtime, double deductions, double netSalary,
                                String dateIssued) throws IOException, DocumentException {
 
-    Document document = new Document();
-    String fileName = "SalarySlip_" + fullName.replace(" ", "_") + ".pdf";
-    File file = new File(fileName);
-    PdfWriter.getInstance(document, new FileOutputStream(file));
+        Document document = new Document();
+        String fileName = "SalarySlip_" + fullName.replace(" ", "_") + ".pdf";
+        File file = new File(fileName);
+        PdfWriter.getInstance(document, new FileOutputStream(file));
 
-    document.open();
+        document.open();
 
-    // ✅ Company Logo
-    try {
-        Image logo = Image.getInstance("src/hrm.png"); // Update with your actual logo path
-        logo.scaleToFit(100, 100);
-        logo.setAlignment(Element.ALIGN_CENTER);
-        document.add(logo);
-    } catch (Exception e) {
-        // Skip logo if not found
-        System.out.println("Logo not found or failed to load.");
+        // ✅ Company Logo
+        try {
+            Image logo = Image.getInstance("src/hrm.png"); // Update with your actual logo path
+            logo.scaleToFit(100, 100);
+            logo.setAlignment(Element.ALIGN_CENTER);
+            document.add(logo);
+        } catch (Exception e) {
+            // Skip logo if not found
+            System.out.println("Logo not found or failed to load.");
+        }
+
+        // ✅ Company Info
+        Paragraph companyInfo = new Paragraph(
+            "EMP COMPANY\n" +
+            "#725 Quezon Blvd. Zone 030 Brgy. 308 Quiapo, Manila\n" +
+            "Contact: 0912-345-6789\n\n",
+            FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK)
+        );
+        companyInfo.setAlignment(Element.ALIGN_CENTER);
+        document.add(companyInfo);
+
+        // ✅ Title
+        Paragraph title = new Paragraph("EMPLOYEE SALARY SLIP\n\n",
+            FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK));
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // ✅ Employee Info
+        document.add(new Paragraph("Name: " + fullName));
+        document.add(new Paragraph("Email: " + gmail));
+        document.add(new Paragraph("Contact: " + contact));
+        document.add(new Paragraph("Address: " + address));
+        document.add(new Paragraph("Date Issued: " + dateIssued + "\n\n"));
+
+        // ✅ Salary Table
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(80);
+        table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        table.addCell("Base Salary");
+        table.addCell("₱" + String.format("%.2f", baseSalary));
+        table.addCell("Overtime Pay");
+        table.addCell("₱" + String.format("%.2f", overtime));
+        table.addCell("Deductions");
+        table.addCell("₱" + String.format("%.2f", deductions));
+        table.addCell("Net Salary");
+        table.addCell("₱" + String.format("%.2f", netSalary));
+
+        document.add(table);
+
+        // ✅ Footer
+        Paragraph footer = new Paragraph(
+            "\nThis document is system-generated and does not require a signature.",
+            FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, BaseColor.GRAY)
+        );
+        footer.setAlignment(Element.ALIGN_CENTER);
+        document.add(footer);
+
+        document.close();
+
+        // ✅ Open the PDF automatically
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(file);
+        } else {
+            JOptionPane.showMessageDialog(null, "PDF generated successfully, but cannot open automatically.");
+        }
     }
 
-    // ✅ Company Info
-    Paragraph companyInfo = new Paragraph(
-        "EMP COMPANY\n" +
-        "#725 Quezon Blvd. Zone 030 Brgy. 308 Quiapo, Manila\n" +
-        "Contact: 0912-345-6789\n\n",
-        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK)
-    );
-    companyInfo.setAlignment(Element.ALIGN_CENTER);
-    document.add(companyInfo);
 
-    // ✅ Title
-    Paragraph title = new Paragraph("EMPLOYEE SALARY SLIP\n\n",
-        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK));
-    title.setAlignment(Element.ALIGN_CENTER);
-    document.add(title);
-
-    // ✅ Employee Info
-    document.add(new Paragraph("Name: " + fullName));
-    document.add(new Paragraph("Email: " + gmail));
-    document.add(new Paragraph("Contact: " + contact));
-    document.add(new Paragraph("Address: " + address));
-    document.add(new Paragraph("Date Issued: " + dateIssued + "\n\n"));
-
-    // ✅ Salary Table
-    PdfPTable table = new PdfPTable(2);
-    table.setWidthPercentage(80);
-    table.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-    table.addCell("Base Salary");
-    table.addCell("₱" + String.format("%.2f", baseSalary));
-    table.addCell("Overtime Pay");
-    table.addCell("₱" + String.format("%.2f", overtime));
-    table.addCell("Deductions");
-    table.addCell("₱" + String.format("%.2f", deductions));
-    table.addCell("Net Salary");
-    table.addCell("₱" + String.format("%.2f", netSalary));
-
-    document.add(table);
-
-    // ✅ Footer
-    Paragraph footer = new Paragraph(
-        "\nThis document is system-generated and does not require a signature.",
-        FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, BaseColor.GRAY)
-    );
-    footer.setAlignment(Element.ALIGN_CENTER);
-    document.add(footer);
-
-    document.close();
-
-    // ✅ Open the PDF automatically
-    if (Desktop.isDesktopSupported()) {
-        Desktop.getDesktop().open(file);
-    } else {
-        JOptionPane.showMessageDialog(null, "PDF generated successfully, but cannot open automatically.");
-    }
-}
-
-    
     //Search employee
     private void Search(String keyword) {
-        String query = "SELECT e.EmpId, p.SalaryRate, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, a.Overtime, "
-                     + "SUM(CASE WHEN a.Status = 'Absent' THEN 1 ELSE 0 END) AS TotalAbsent "
-                     + "FROM employee e "
-                     + "LEFT JOIN attendance a ON e.EmpId = a.EmpId "
-                     + "LEFT JOIN position p ON e.PositionId = p.PositionId "
-                     + "WHERE e.EmpId LIKE ? OR CONCAT(e.FirstName, '  ', e.MiddleName, '  ', e.LastName) LIKE ? "
-                     + "GROUP BY e.EmpId, FullName";
+            String query = "SELECT e.EmpId, p.SalaryRate, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, a.Overtime, "
+                         + "SUM(CASE WHEN a.Status = 'Absent' THEN 1 ELSE 0 END) AS TotalAbsent "
+                         + "FROM employee e "
+                         + "LEFT JOIN attendance a ON e.EmpId = a.EmpId "
+                         + "LEFT JOIN position p ON e.PositionId = p.PositionId "
+                         + "WHERE e.EmpId LIKE ? OR CONCAT(e.FirstName, '  ', e.MiddleName, '  ', e.LastName) LIKE ? "
+                         + "GROUP BY e.EmpId, FullName";
 
-        try (Connection con = DatabaseConnection.Database.getConnection();
-             PreparedStatement pst = con.prepareStatement(query)) {
+            try (Connection con = DatabaseConnection.Database.getConnection();
+                 PreparedStatement pst = con.prepareStatement(query)) {
 
-            pst.setString(1, "%" + keyword + "%");
-            pst.setString(2, "%" + keyword + "%");
+                pst.setString(1, "%" + keyword + "%");
+                pst.setString(2, "%" + keyword + "%");
 
-            ResultSet rs = pst.executeQuery();
+                ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) {
-                String fullName = rs.getString("FullName");
-                empId = rs.getInt("EmpId");
-                int totalAbsent = rs.getInt("TotalAbsent");
-                int totalOvertime = rs.getInt("Overtime");
-                double salaryRate = rs.getDouble("SalaryRate");
-                double deduction = totalAbsent * 695.0;
-                double overtimePay = totalOvertime * 135.0;
+                if (rs.next()) {
+                    String fullName = rs.getString("FullName");
+                    empId = rs.getInt("EmpId");
+                    int totalAbsent = rs.getInt("TotalAbsent");
+                    int totalOvertime = rs.getInt("Overtime");
+                    double salaryRate = rs.getDouble("SalaryRate");
+                    double deduction = totalAbsent * 695.0;
+                    double overtimePay = totalOvertime * 135.0;
 
-                EmployeeName.setText(fullName);
-                Deductions.setText(String.format("₱%.2f", deduction));
-                Overpay.setText(String.format("₱%.2f",overtimePay));
-                BaseSalary.setText(String.format("₱%.2f",salaryRate));
-                
-                double totalSalary = salaryRate - deduction + overtimePay;               
-                SalaryMonth.setText(String.format("₱%.2f",totalSalary));
-            } else {
-                EmployeeName.setText("");
-                Deductions.setText("₱0.00");
+                    EmployeeName.setText(fullName);
+                    Deductions.setText(String.format("₱%.2f", deduction));
+                    Overpay.setText(String.format("₱%.2f",overtimePay));
+                    BaseSalary.setText(String.format("₱%.2f",salaryRate));
+
+                    double totalSalary = salaryRate - deduction + overtimePay;               
+                    SalaryMonth.setText(String.format("₱%.2f",totalSalary));
+                } else {
+                    EmployeeName.setText("");
+                    Deductions.setText("₱0.00");
+                }
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+                Clear();
             }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-            Clear();
-        }
     }
 
     public void SearchSalary(String keyword) {

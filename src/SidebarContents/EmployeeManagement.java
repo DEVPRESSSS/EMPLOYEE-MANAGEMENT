@@ -483,7 +483,7 @@ public class EmployeeManagement extends javax.swing.JPanel {
 
     private void ContactKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ContactKeyTyped
         
-         char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
        
         if(!Character.isDigit(c)){
             

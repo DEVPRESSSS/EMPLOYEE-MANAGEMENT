@@ -255,6 +255,7 @@ public class JobPosition extends javax.swing.JPanel {
         Department.setSelectedItem(model.getValueAt(selectedRow, 4).toString());
     }
     
+    //Delete the record
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please select a row to delete!");
@@ -321,12 +322,14 @@ public class JobPosition extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_PositionNameKeyTyped
     
-    
+    //Clear all fields
     private void Clear(){
         
         PositionName.setText("");
         SalaryRate.setText("");
     }
+    
+    //Add job positions
     private void AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddActionPerformed
        PreparedStatement pst = null;
         Connection con = DatabaseConnection.Database.getConnection();
@@ -371,10 +374,12 @@ public class JobPosition extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_AddActionPerformed
 
+    //Get the selected row 
     private void PositionTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PositionTableMouseClicked
        GetSelectedRow();
     }//GEN-LAST:event_PositionTableMouseClicked
     
+    //Update job position record
     private void updatePosition() {
         Connection con = DatabaseConnection.Database.getConnection();
         PreparedStatement pst = null;
@@ -426,6 +431,7 @@ public class JobPosition extends javax.swing.JPanel {
         }
     }
 
+    //Fetch all job positions
     private void LoadPositionData() {
         Connection con = DatabaseConnection.Database.getConnection();
         PreparedStatement pst = null;
@@ -470,7 +476,7 @@ public class JobPosition extends javax.swing.JPanel {
 
     
     private final List<Integer> departmentIds =new ArrayList<>();
-
+    //Fetch all departments
     private void loadDepartments() {
         Connection con = DatabaseConnection.Database.getConnection();
         PreparedStatement pst = null;

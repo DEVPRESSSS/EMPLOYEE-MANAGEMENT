@@ -77,7 +77,7 @@ public class AttendanceForm extends javax.swing.JFrame {
             }
         });
 
-        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Present", "Absent", "Late", "OnLeave" }));
+        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Present", "Absent", "Late", " " }));
 
         StatusLbl.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         StatusLbl.setText("Status:");

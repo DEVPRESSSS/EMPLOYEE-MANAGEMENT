@@ -126,7 +126,7 @@
                     <StringItem index="0" value="Present"/>
                     <StringItem index="1" value="Absent"/>
                     <StringItem index="2" value="Late"/>
-                    <StringItem index="3" value="OnLeave"/>
+                    <StringItem index="3" value=" "/>
                   </StringArray>
                 </Property>
               </Properties>
