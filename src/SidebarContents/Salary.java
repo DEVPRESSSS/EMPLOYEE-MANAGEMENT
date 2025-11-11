@@ -104,6 +104,7 @@ public class Salary extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         SalaryTable = new javax.swing.JTable();
         AddBtn = new javax.swing.JButton();
+        PrintBtn = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -250,6 +251,13 @@ public class Salary extends javax.swing.JPanel {
             }
         });
 
+        PrintBtn.setText("Print");
+        PrintBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PrintBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -260,6 +268,8 @@ public class Salary extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(PrintBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(AddBtn)))
                 .addContainerGap())
         );
@@ -269,7 +279,9 @@ public class Salary extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(AddBtn)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AddBtn)
+                    .addComponent(PrintBtn))
                 .addContainerGap())
         );
 
@@ -319,6 +331,10 @@ public class Salary extends javax.swing.JPanel {
             Logger.getLogger(Salary.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_AddBtnActionPerformed
+
+    private void PrintBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintBtnActionPerformed
+        printAllSalariesToOnePDF();
+    }//GEN-LAST:event_PrintBtnActionPerformed
     
     //Generate all the salary
     private void GenerateSalary() throws IOException {
@@ -612,7 +628,7 @@ public class Salary extends javax.swing.JPanel {
         try {
 
 
-            String sql = "SELECT s.SalaryID, Concat(e.Firstname, '', e.MiddleName, '',e.LastName, '') as FullName, "
+            String sql = "SELECT s.SalaryID, Concat(e.Firstname, ' ', e.MiddleName, ' ',e.LastName, ' ') as FullName, "
                     + "s.BaseSalary, s.OvertimePay, s.Deductions, s.NetSalary, s.DateIssued FROM salaries s "
                     + "INNER JOIN employee e ON s.EmpId = e.EmpId";
             
@@ -660,7 +676,110 @@ public class Salary extends javax.swing.JPanel {
     }
     
 
-    
+    private void printAllSalariesToOnePDF() {
+        DefaultTableModel model = (DefaultTableModel) SalaryTable.getModel();
+
+        // 🟠 Check if table is empty
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No salary records found to print.");
+            return;
+        }
+
+        Document document = new Document();
+        String fileName = "All_Salary_Slips.pdf";
+
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(fileName));
+            document.open();
+
+            // 🏢 Company Header
+            try {
+                Image logo = Image.getInstance("src/hrm.png");
+                logo.scaleToFit(100, 100);
+                logo.setAlignment(Element.ALIGN_CENTER);
+                document.add(logo);
+            } catch (Exception e) {
+                System.out.println("Logo not found or failed to load.");
+            }
+
+            Paragraph companyInfo = new Paragraph(
+                "EMP COMPANY\n" +
+                "#725 Quezon Blvd. Zone 030 Brgy. 308 Quiapo, Manila\n" +
+                "Contact: 0912-345-6789\n\n",
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK)
+            );
+            companyInfo.setAlignment(Element.ALIGN_CENTER);
+            document.add(companyInfo);
+
+            Paragraph reportTitle = new Paragraph("ALL EMPLOYEE SALARY SLIPS\n\n",
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK));
+            reportTitle.setAlignment(Element.ALIGN_CENTER);
+            document.add(reportTitle);
+
+            // 🧾 Loop through all rows in JTable
+            for (int i = 0; i < model.getRowCount(); i++) {
+
+                String fullName = model.getValueAt(i, 1).toString();
+                double baseSalary = Double.parseDouble(model.getValueAt(i, 2).toString());
+                double overtime = Double.parseDouble(model.getValueAt(i, 3).toString());
+                double deductions = Double.parseDouble(model.getValueAt(i, 4).toString());
+                double netSalary = Double.parseDouble(model.getValueAt(i, 5).toString());
+                String dateIssued = model.getValueAt(i, 6).toString();
+
+                // Add a separator line between employees (except the first)
+                if (i > 0) {
+                    document.add(new Paragraph("\n------------------------------------------------------------\n"));
+                }
+
+                // 🧍 Employee Header
+                Paragraph employeeTitle = new Paragraph("Employee: " + fullName + "\n\n",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 13, BaseColor.BLACK));
+                employeeTitle.setAlignment(Element.ALIGN_LEFT);
+                document.add(employeeTitle);
+
+                // 📋 Salary Info Table
+                PdfPTable table = new PdfPTable(2);
+                table.setWidthPercentage(80);
+                table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+                table.addCell("Base Salary");
+                table.addCell("₱" + String.format("%.2f", baseSalary));
+                table.addCell("Benefits Pay");
+                table.addCell("₱" + String.format("%.2f", overtime));
+                table.addCell("Deductions");
+                table.addCell("₱" + String.format("%.2f", deductions));
+                table.addCell("Net Salary");
+                table.addCell("₱" + String.format("%.2f", netSalary));
+                table.addCell("Date Issued");
+                table.addCell(dateIssued);
+
+                document.add(table);
+            }
+
+            // 🧾 Footer
+            Paragraph footer = new Paragraph(
+                "\n\nThis document is system-generated and does not require a signature.",
+                FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 10, BaseColor.GRAY)
+            );
+            footer.setAlignment(Element.ALIGN_CENTER);
+            document.add(footer);
+
+            document.close();
+
+            JOptionPane.showMessageDialog(null, "All salary slips successfully generated in one PDF!");
+
+            // Open PDF
+            File file = new File(fileName);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(file);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error generating PDF: " + e.getMessage());
+        }
+    }
+
+
     
     private void CalculateAllDeductions() {
         Connection con = DatabaseConnection.Database.getConnection();
@@ -729,6 +848,7 @@ public class Salary extends javax.swing.JPanel {
     private javax.swing.JLabel Deductions;
     private javax.swing.JLabel EmployeeName;
     private javax.swing.JLabel Overpay;
+    private javax.swing.JButton PrintBtn;
     private javax.swing.JTextField SalaryMonth;
     private javax.swing.JTable SalaryTable;
     private javax.swing.JTextField SearchEmployee;
