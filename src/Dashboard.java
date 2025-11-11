@@ -1,5 +1,6 @@
 
 import SidebarContents.Attendance;
+import SidebarContents.Benefits;
 import SidebarContents.DeductionsManagement;
 import SidebarContents.EmployeeManagement;
 import SidebarContents.JobPosition;
@@ -36,6 +37,7 @@ public class Dashboard extends javax.swing.JFrame {
         Logout = new javax.swing.JButton();
         JobPositions = new javax.swing.JButton();
         Deduction = new javax.swing.JButton();
+        BenefitsBtn = new javax.swing.JButton();
         MainContentPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -124,6 +126,16 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        BenefitsBtn.setBackground(new java.awt.Color(255, 255, 255));
+        BenefitsBtn.setForeground(new java.awt.Color(0, 153, 255));
+        BenefitsBtn.setText("Benefits");
+        BenefitsBtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        BenefitsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BenefitsBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -140,7 +152,8 @@ public class Dashboard extends javax.swing.JFrame {
                             .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(JobPositions, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Leave, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Deduction, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(Deduction, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BenefitsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(65, 65, 65)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -151,7 +164,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel1)
-                .addGap(79, 79, 79)
+                .addGap(57, 57, 57)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(SalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -163,11 +176,13 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(Leave, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(JobPositions, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(Deduction, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Deduction, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(BenefitsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addContainerGap())
         );
 
         MainContentPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -253,6 +268,10 @@ public class Dashboard extends javax.swing.JFrame {
          showPanel(new DeductionsManagement());
     }//GEN-LAST:event_DeductionActionPerformed
 
+    private void BenefitsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BenefitsBtnActionPerformed
+        showPanel(new Benefits());
+    }//GEN-LAST:event_BenefitsBtnActionPerformed
+
     //Dynamic showpanel
     public void showPanel(JPanel panel){
         MainContentPanel.removeAll();
@@ -277,6 +296,7 @@ public class Dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Attendance;
+    private javax.swing.JButton BenefitsBtn;
     private javax.swing.JButton Deduction;
     private javax.swing.JButton JobPositions;
     private javax.swing.JButton Leave;
