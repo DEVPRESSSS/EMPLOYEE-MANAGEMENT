@@ -310,18 +310,19 @@ public class DeductionsManagement extends javax.swing.JPanel {
     //Add deductions
     private void Add(){
         String name = DeductionName.getText();
-        Double amount = Double.parseDouble(Amount.getText());
         PreparedStatement pst = null;
         Connection con = DatabaseConnection.Database.getConnection();
         
         try {
-            if(name.equals("") || amount.equals("")){
+            if(name.equals("") || Amount.getText().equals("")){
                 
                 JOptionPane.showMessageDialog(null, "All fields are required");
                 Clear();
                 return;
             }
         
+            Double amount = Double.parseDouble(Amount.getText());
+
             if(amount <=0){
 
                 JOptionPane.showMessageDialog(null, "Amount of deductions cant be zero");
@@ -339,14 +340,15 @@ public class DeductionsManagement extends javax.swing.JPanel {
             int rowsInserted = pst.executeUpdate();
             if (rowsInserted > 0) {
                 
-                 JOptionPane.showMessageDialog(null, "Employee attendance record successfully");
+                 JOptionPane.showMessageDialog(null, "Deductions added successfully");
                  FetchAllDeductions();
                  Clear();
                 
             }
         } catch (SQLException ex) {
             
-            ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Deductions name are already taken");
+                Clear();
         }
         
     }
@@ -374,15 +376,15 @@ public class DeductionsManagement extends javax.swing.JPanel {
         Connection con = DatabaseConnection.Database.getConnection();
         PreparedStatement pst = null;
         String name = DeductionName.getText();
-        Double amount = Double.parseDouble( Amount.getText());
             
-        if(name.equals("") || amount.equals("")){
+        if(name.equals("") || Amount.getText().equals("")){
                 
             JOptionPane.showMessageDialog(null, "All fields are required");
             Clear();
             return;
         }
-        
+        Double amount = Double.parseDouble( Amount.getText());
+
         if(amount <=0){
             
             JOptionPane.showMessageDialog(null, "Amount of deductions cant be zero");

@@ -154,6 +154,11 @@ public class Benefits extends javax.swing.JPanel {
         });
 
         ClearBtn.setText("Clear");
+        ClearBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClearBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -259,6 +264,10 @@ public class Benefits extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_AmountKeyTyped
 
+    private void ClearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearBtnActionPerformed
+        Clear();
+    }//GEN-LAST:event_ClearBtnActionPerformed
+
    //Delete     
     private void Delete(){
         
@@ -292,21 +301,24 @@ public class Benefits extends javax.swing.JPanel {
     //Add benefits
     private void Add(){
         String name = Name.getText();
-        Double amount = Double.parseDouble(Amount.getText());
-        PreparedStatement pst = null;
+     
         Connection con = DatabaseConnection.Database.getConnection();
         
-        try {
-            if(name.equals("") || amount.equals("")){
+        if(name.equals("") || Amount.getText().equals("")){
                 
                 JOptionPane.showMessageDialog(null, "All fields are required");
                 Clear();
                 return;
-            }
+        }
+        
+        Double amount = Double.parseDouble(Amount.getText());
+        PreparedStatement pst = null;
+        try {
+          
         
             if(amount <=0){
 
-                JOptionPane.showMessageDialog(null, "Amount of deductions cant be zero");
+                JOptionPane.showMessageDialog(null, "Amount of benefits cant be zero");
                 Clear();
                 return;
             }
@@ -328,7 +340,8 @@ public class Benefits extends javax.swing.JPanel {
             }
         } catch (SQLException ex) {
             
-            ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Benefits name are already taken");
+                Clear();
         }
     }
     //Clear fields
@@ -354,14 +367,15 @@ public class Benefits extends javax.swing.JPanel {
         Connection con = DatabaseConnection.Database.getConnection();
         PreparedStatement pst = null;
         String name = Name.getText();
-        Double amount = Double.parseDouble( Amount.getText());
             
-        if(name.equals("") || amount.equals("")){
+        if(name.equals("") || Amount.getText().equals("")){
                 
             JOptionPane.showMessageDialog(null, "All fields are required");
             Clear();
             return;
         }
+        Double amount = Double.parseDouble( Amount.getText());
+
         
         if(amount <=0){
             
@@ -394,6 +408,7 @@ public class Benefits extends javax.swing.JPanel {
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error updating position: " + e.getMessage());
+            Clear();
         } finally {
             try {
                 if (pst != null) pst.close();
