@@ -28,9 +28,13 @@ import java.util.logging.Logger;
 public class Salary extends javax.swing.JPanel {
 
     private int empId;
+    private double alldeductions;
+    private double allbenefits;
     public Salary() {
         initComponents();
         LoadData();
+        CalculateAllDeductions();
+        CalculateAllBenefits();
         SearchEmployee.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -95,6 +99,7 @@ public class Salary extends javax.swing.JPanel {
         Overpay = new javax.swing.JLabel();
         BaseSalary = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         SalaryTable = new javax.swing.JTable();
@@ -107,7 +112,7 @@ public class Salary extends javax.swing.JPanel {
 
         jLabel1.setText("Base salary:");
 
-        jLabel2.setText("Overtime Amount:");
+        jLabel2.setText("Benefits Amount:");
 
         jLabel3.setText("Salary/This Month:");
 
@@ -133,12 +138,18 @@ public class Salary extends javax.swing.JPanel {
 
         jLabel7.setText("Search :");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 204, 204));
+        jLabel8.setText("Absent deduction= (No. of absent  * 695)");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,15 +187,18 @@ public class Salary extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Deductions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BaseSalary, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(SearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Deductions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BaseSalary, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -320,7 +334,6 @@ public class Salary extends javax.swing.JPanel {
             double deductionValue = 0;
             double baseSalaryValue = 0;
 
-            // 🛑 1️⃣ Check if employee exists and if status is active
             String statusQuery = "SELECT Status FROM employee WHERE EmpId = ?";
             PreparedStatement statusStmt = con.prepareStatement(statusQuery);
             statusStmt.setInt(1, empId);
@@ -333,7 +346,7 @@ public class Salary extends javax.swing.JPanel {
                             "Cannot generate salary. Employee is " + status + "!",
                             "Access Denied", JOptionPane.WARNING_MESSAGE);
                     Clear();
-                    return; // stop execution
+                    return; 
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Employee not found!");
@@ -354,6 +367,15 @@ public class Salary extends javax.swing.JPanel {
                 return;
             }
 
+            
+            //Add the benefits 
+            
+            
+            
+            
+            
+            
+            //Minus the deductions
             if (!input.isEmpty() && !inputDeduction.isEmpty() && !inputBaseSalary.isEmpty()) {
                 input = input.replace("₱", "").trim();
                 inputDeduction = inputDeduction.replace("₱", "").trim();
@@ -423,14 +445,12 @@ public class Salary extends javax.swing.JPanel {
 
         document.open();
 
-        // ✅ Company Logo
         try {
-            Image logo = Image.getInstance("src/hrm.png"); // Update with your actual logo path
+            Image logo = Image.getInstance("src/hrm.png"); 
             logo.scaleToFit(100, 100);
             logo.setAlignment(Element.ALIGN_CENTER);
             document.add(logo);
         } catch (Exception e) {
-            // Skip logo if not found
             System.out.println("Logo not found or failed to load.");
         }
 
@@ -464,7 +484,7 @@ public class Salary extends javax.swing.JPanel {
 
         table.addCell("Base Salary");
         table.addCell("₱" + String.format("%.2f", baseSalary));
-        table.addCell("Overtime Pay");
+        table.addCell("Benefits Pay");
         table.addCell("₱" + String.format("%.2f", overtime));
         table.addCell("Deductions");
         table.addCell("₱" + String.format("%.2f", deductions));
@@ -483,7 +503,6 @@ public class Salary extends javax.swing.JPanel {
 
         document.close();
 
-        // ✅ Open the PDF automatically
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().open(file);
         } else {
@@ -516,8 +535,8 @@ public class Salary extends javax.swing.JPanel {
                     int totalAbsent = rs.getInt("TotalAbsent");
                     int totalOvertime = rs.getInt("Overtime");
                     double salaryRate = rs.getDouble("SalaryRate");
-                    double deduction = totalAbsent * 695.0;
-                    double overtimePay = totalOvertime * 135.0;
+                    double deduction =  (totalAbsent * 695.0) + alldeductions;
+                    double overtimePay =  allbenefits;
 
                     EmployeeName.setText(fullName);
                     Deductions.setText(String.format("₱%.2f", deduction));
@@ -536,7 +555,7 @@ public class Salary extends javax.swing.JPanel {
                 Clear();
             }
     }
-
+    //Search employee
     public void SearchSalary(String keyword) {
         DefaultTableModel model = (DefaultTableModel) SalaryTable.getModel();
         model.setRowCount(0); 
@@ -630,7 +649,7 @@ public class Salary extends javax.swing.JPanel {
             }
         }
     }
-    
+    //Clear all fields
     private void Clear(){
         EmployeeName.setText("");
         Deductions.setText("");
@@ -639,6 +658,71 @@ public class Salary extends javax.swing.JPanel {
         SalaryMonth.setText("");
 
     }
+    
+
+    
+    
+    private void CalculateAllDeductions() {
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        double totalDeductions = 0.0; // variable to store total
+
+        try {
+            String sql = "SELECT Amount FROM deductions";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                totalDeductions += rs.getDouble("Amount");
+            }
+
+            alldeductions = totalDeductions;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading data: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+            }
+        }
+    }
+    
+    private void CalculateAllBenefits() {
+        Connection con = DatabaseConnection.Database.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        double totalBenefits= 0.0; // variable to store total
+
+        try {
+            String sql = "SELECT Amount FROM benefits";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                totalBenefits += rs.getDouble("Amount");
+            }
+
+            allbenefits = totalBenefits;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error loading data: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+            }
+        }
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddBtn;
     private javax.swing.JLabel BaseSalary;
@@ -656,6 +740,7 @@ public class Salary extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

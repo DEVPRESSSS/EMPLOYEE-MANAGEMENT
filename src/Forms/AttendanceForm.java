@@ -29,10 +29,6 @@ public class AttendanceForm extends javax.swing.JFrame {
              TimeInBtn.setVisible(false);
              StatusLbl.setVisible(false);
             
-        }else{
-            
-            TimeInBtn.setVisible(false);
-            TimeOutBtn.setVisible(false);
         }
         
 
