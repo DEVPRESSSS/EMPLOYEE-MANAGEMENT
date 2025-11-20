@@ -408,11 +408,25 @@ public class Salary extends javax.swing.JPanel {
                 Clear();
                 return;
             }
+                        
+                // Check attendance
+                String attendanceQuery = "SELECT COUNT(*) AS PresentDays FROM attendance " +
+                         "WHERE EmpId = ? AND Status = 'Present' " +
+                         "AND MONTH(Date) = MONTH(CURDATE()) " +
+                         "AND YEAR(Date) = YEAR(CURDATE())";
 
-            
-            //Add the benefits 
-            
-            
+                PreparedStatement attendanceStmt = con.prepareStatement(attendanceQuery);
+                attendanceStmt.setInt(1, empId);
+                ResultSet attendanceRs = attendanceStmt.executeQuery();
+
+                if (attendanceRs.next() && attendanceRs.getInt("PresentDays") < 15) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Cannot generate full salary. Employee has only " + attendanceRs.getInt("PresentDays") + " present day(s) this month!",
+                        "Insufficient Attendance", JOptionPane.WARNING_MESSAGE);
+                    Clear();
+                    return;
+                }
+
             
             
             
