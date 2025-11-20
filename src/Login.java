@@ -8,6 +8,7 @@ public class Login extends javax.swing.JFrame {
   
     public Login() {
         initComponents();
+        getRootPane().setDefaultButton(LoginBtn);
     }
 
 
@@ -75,6 +76,11 @@ public class Login extends javax.swing.JFrame {
         LoginBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LoginBtnActionPerformed(evt);
+            }
+        });
+        LoginBtn.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                LoginBtnKeyPressed(evt);
             }
         });
 
@@ -251,6 +257,11 @@ public class Login extends javax.swing.JFrame {
             Password.setEchoChar('•');
         }
     }//GEN-LAST:event_ShowPasswordActionPerformed
+
+    private void LoginBtnKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_LoginBtnKeyPressed
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_LoginBtnKeyPressed
 
    private void Auth() {
     String username = Username.getText().trim();

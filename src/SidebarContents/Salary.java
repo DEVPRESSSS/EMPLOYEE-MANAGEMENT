@@ -111,6 +111,12 @@ public class Salary extends javax.swing.JPanel {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        SearchSalarylist.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SearchSalarylistKeyTyped(evt);
+            }
+        });
+
         jLabel1.setText("Base salary:");
 
         jLabel2.setText("Benefits Amount:");
@@ -126,6 +132,11 @@ public class Salary extends javax.swing.JPanel {
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 SearchEmployeeInputMethodTextChanged(evt);
+            }
+        });
+        SearchEmployee.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SearchEmployeeKeyTyped(evt);
             }
         });
 
@@ -335,6 +346,21 @@ public class Salary extends javax.swing.JPanel {
     private void PrintBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintBtnActionPerformed
         printAllSalariesToOnePDF();
     }//GEN-LAST:event_PrintBtnActionPerformed
+
+    private void SearchEmployeeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchEmployeeKeyTyped
+        // TODO add your handling code here:       
+    
+         if (SearchEmployee.getText().length() >= 15) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_SearchEmployeeKeyTyped
+
+    private void SearchSalarylistKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchSalarylistKeyTyped
+        // TODO add your handling code here:
+        if (SearchSalarylist.getText().length() >= 25) { 
+            evt.consume(); 
+        }
+    }//GEN-LAST:event_SearchSalarylistKeyTyped
     
     //Generate all the salary
     private void GenerateSalary() throws IOException {
