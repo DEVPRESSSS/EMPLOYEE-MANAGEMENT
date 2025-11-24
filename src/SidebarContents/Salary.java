@@ -570,7 +570,7 @@ public class Salary extends javax.swing.JPanel {
     //Search employee
     private void Search(String keyword) {
             String query = "SELECT e.EmpId, p.SalaryRate, CONCAT(e.FirstName, ' ', e.MiddleName, ' ', e.LastName) AS FullName, a.Overtime, "
-                         + "SUM(CASE WHEN a.Status = 'Absent' THEN 1 ELSE 0 END) AS TotalAbsent "
+                         + "SUM(CASE WHEN a.Status = 'Completed' THEN 1 ELSE 0 END) AS TotalPresent "
                          + "FROM employee e "
                          + "LEFT JOIN attendance a ON e.EmpId = a.EmpId "
                          + "LEFT JOIN position p ON e.PositionId = p.PositionId "
@@ -588,10 +588,12 @@ public class Salary extends javax.swing.JPanel {
                 if (rs.next()) {
                     String fullName = rs.getString("FullName");
                     empId = rs.getInt("EmpId");
-                    int totalAbsent = rs.getInt("TotalAbsent");
+                    int totalPresent = rs.getInt("TotalPresent");
                     int totalOvertime = rs.getInt("Overtime");
                     double salaryRate = rs.getDouble("SalaryRate");
-                    double deduction =  (totalAbsent * 695.0) + alldeductions;
+                    double totalSalary = totalPresent;
+                    double deduction =  alldeductions;
+                    System.out.print(deduction);
                     double overtimePay =  allbenefits;
 
                     EmployeeName.setText(fullName);
@@ -599,8 +601,9 @@ public class Salary extends javax.swing.JPanel {
                     Overpay.setText(String.format("₱%.2f",overtimePay));
                     BaseSalary.setText(String.format("₱%.2f",salaryRate));
 
-                    double totalSalary = salaryRate - deduction + overtimePay;               
-                    SalaryMonth.setText(String.format("₱%.2f",totalSalary));
+                   double grandtotalSalary = (totalSalary * deduction) + overtimePay;
+//                    double grandtotalSalary = (totalSalary * deduction);               
+                    SalaryMonth.setText(String.format("₱%.2f",grandtotalSalary));
                 } else {
                     EmployeeName.setText("");
                     Deductions.setText("₱0.00");

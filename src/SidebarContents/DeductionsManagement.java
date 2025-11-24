@@ -266,14 +266,21 @@ public class DeductionsManagement extends javax.swing.JPanel {
     }//GEN-LAST:event_DeductionNameKeyTyped
 
     private void AmountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AmountKeyTyped
-         char c = evt.getKeyChar();
-       
-        if(!Character.isDigit(c)){
-            
+        char c = evt.getKeyChar();
+    
+        // Allow digits or a dot
+        if (!Character.isDigit(c) && c != '.' && c != '\b') {
+        evt.consume();
+    }
+
+        // Allow only one dot
+        if (c == '.' && Amount.getText().contains(".")) {
             evt.consume();
         }
-         if (Amount.getText().length() >= 4) { 
-            evt.consume(); 
+
+        // Optional: limit total length (including dot)
+        if (Amount.getText().length() >= 7) { // adjust max length as needed
+            evt.consume();
         }
     }//GEN-LAST:event_AmountKeyTyped
     
